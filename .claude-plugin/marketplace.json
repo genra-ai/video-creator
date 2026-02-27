@@ -1,0 +1,13 @@
+{
+  "name": "genra-ai",
+  "owner": {
+    "name": "Genra AI"
+  },
+  "plugins": [
+    {
+      "name": "genra",
+      "source": "./plugins/genra",
+      "description": "Control the Genra AI video editor"
+    }
+  ]
+}
