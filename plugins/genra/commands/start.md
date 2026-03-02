@@ -11,12 +11,7 @@ curl -s -X POST https://agent.genra.ai/ -H "Content-Type: application/json" \
   -d '{"action":"get_state"}'
 ```
 
-After auth, `get_state` returns project list. Use `enter_session` to connect:
-
-```bash
-curl -s -X POST https://agent.genra.ai/ -H "Content-Type: application/json" \
-  -d '{"session_key":"SK","action":"enter_session","params":{"project_id":"...","session_id":"..."}}'
-```
+After auth, `get_state` returns project list with clickable chat targets. Click one to enter the editor.
 
 ## Commands
 
