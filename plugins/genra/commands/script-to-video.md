@@ -1,11 +1,10 @@
 # Script to Video
 
-将用户提供的多镜头剧本（6-15 镜头、多角色、多场景）转为视频。**不重写剧本**，只补全视觉信息后直接发送给 S0 Pipeline 执行。需要先调用 `/ai-bridge` 获取连接信息。
+将用户提供的多镜头剧本（6-15 镜头、多角色、多场景）转为视频。**不重写剧本**，只补全视觉信息后直接发送给 S0 Pipeline 执行。
 
 ## 流程概览
 
 ```
-Step 0：调用 /ai-bridge 获取连接信息
 Step 1：分析剧本，补全角色/场景视觉描述
 Step 2：创建项目，发送完整剧本消息（含补全信息）
 Step 3：Filter 检查（重点：角色一致性、台词归属）
@@ -16,12 +15,6 @@ Step 7：生成所有视频
 Step 8：预览验证
 Step 9：导出
 ```
-
----
-
-## Step 0：获取连接信息
-
-调用 `/ai-bridge` 获取 URL + SESSION。
 
 ---
 
@@ -170,7 +163,7 @@ BGM：[情绪描述]
 [剩余镜头原文]
 ```
 
-发送后轮询（15-30 秒间隔）等待完成，再 `get_state` 获取项目状态。
+发送后等待完成，再获取项目状态。
 
 ---
 
@@ -178,10 +171,10 @@ BGM：[情绪描述]
 
 依次检查以下 filter，发现问题立即用 `edit` 修改 editableFields，**不要攒到最后才看**：
 
-执行 click sidebar.filter_shots（检查镜头：景别、运镜是否被正确解析）
-执行 click sidebar.filter_dialogs（检查台词：台词归属是否正确）
-执行 click sidebar.filter_characters（检查角色：identity_anchor 在所有镜头必须一致）
-执行 click sidebar.filter_locations（检查场景）
+检查镜头（景别、运镜是否被正确解析）
+检查台词（台词归属是否正确）
+检查角色（identity_anchor 在所有镜头必须一致）
+检查场景
 
 ### 检查重点
 
@@ -207,16 +200,16 @@ BGM：[情绪描述]
 
 ### ① 检查哪些帧已有图片
 
-执行 click sidebar.filter_shots
+检查镜头
 
 - 若有 `img: false` 的帧 → 只选中缺失的帧，通过 `sidebar.btn_generate` 补生成
 - 所有首帧 `img: true` 后，进入一致性检查
 
 ### ② 按角色分组检查外观一致性
 
-从 `get_state` 或 `filter_characters` 列出每个角色出现的所有镜头，按角色分组逐组预览：
+从项目状态或角色过滤器列出每个角色出现的所有镜头，按角色分组逐组预览：
 
-执行 click frame.preview.<frame_id>
+逐帧预览
 
 **同一角色所有镜头横向对比**，重点检查：
 
@@ -277,7 +270,7 @@ BGM：[情绪描述]
 
 **音频必须先于视频生成**（音频时长决定视频时长）：
 
-执行 click btn_pipeline_audio
+生成音频
 
 ### 多角色声音方向
 
@@ -305,25 +298,19 @@ BGM：[情绪描述]
 发消息：「请把角色[角色名]的音色设置为 $<audio_asset_id>」
 ```
 
-等待所有音频生成完成（10 秒间隔轮询）。
+等待所有音频生成完成。
 
 ---
 
 ## Step 7：生成所有视频
 
-音频完成后，生成视频：
-
-执行 click btn_pipeline_videos
-
-等待所有视频生成完成（10 秒间隔轮询）。
+音频完成后，生成所有视频，等待完成。
 
 ---
 
 ## Step 8：预览验证
 
 逐个预览，重点检查**场景切换处**和**同场景衔接处**：
-
-执行 click shot.preview.<shot_id>
 
 **检查点**：
 - **场景切换处**：切换是否干净自然
@@ -335,9 +322,7 @@ BGM：[情绪描述]
 
 ## Step 9：导出
 
-所有镜头验证通过后导出：
-
-执行 click workspace.btn_export
+所有镜头验证通过后导出。
 
 ---
 

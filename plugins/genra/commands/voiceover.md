@@ -1,11 +1,10 @@
 # Voiceover
 
-生成 20-30 秒口播视频：真人风格，面向镜头讲话，固定景别，相邻镜头首尾帧连续。需要先调用 `/ai-bridge` 获取连接信息。
+生成 20-30 秒口播视频：真人风格，面向镜头讲话，固定景别，相邻镜头首尾帧连续。
 
 ## 流程概览
 
 ```
-Step 0：调用 /ai-bridge 获取连接信息
 Step 1：根据用户主题生成剧本（4-6 段台词）
 Step 2：创建项目，一次性发送 ICT
 Step 3：Filter 检查
@@ -16,12 +15,6 @@ Step 7：生成所有视频
 Step 8：预览验证
 Step 9：导出
 ```
-
----
-
-## Step 0：获取连接信息
-
-调用 `/ai-bridge` 获取 URL + SESSION。
 
 ---
 
@@ -73,7 +66,7 @@ Step 9：导出
 - 所有镜头背景环境完全一致：背景中的物品摆放、装饰细节、灯光位置和颜色均保持不变，不得在不同镜头中出现或消失任何背景元素
 ```
 
-发送后轮询（15-30 秒间隔）等待完成，再 `get_state` 获取项目状态。
+发送后等待完成，再获取项目状态。
 
 ---
 
@@ -81,10 +74,10 @@ Step 9：导出
 
 依次检查以下 filter，发现问题立即用 `edit` 修改 editableFields，不要攒到最后才看：
 
-执行 click sidebar.filter_shots
-执行 click sidebar.filter_dialogs
-执行 click sidebar.filter_characters（确认所有镜头角色描述一致）
-执行 click sidebar.filter_locations
+检查镜头
+检查台词
+检查角色（确认所有镜头角色描述一致）
+检查场景
 
 **检查重点**：
 - 所有镜头景别一致（中景，固定机位）
@@ -100,7 +93,7 @@ Step 9：导出
 
 **① 检查哪些帧已有图片**（`img: true`），哪些缺失（`img: false`）：
 
-执行 click sidebar.filter_shots
+检查镜头
 
 查看返回的 frames 列表：
 - 若有 `img: false` 的帧 → 只选中缺失的帧，通过 `sidebar.btn_generate` 补生成
@@ -110,8 +103,8 @@ Step 9：导出
 
 **核心原则**：以镜头1为基准，从镜头2开始，每张图都要与上一张比对，不一致立即修正，**不要等到最后才批量处理**。
 
-执行 click frame.preview.<shot_1_start_frame_id>（建立基准）
-执行 click frame.preview.<shot_2_start_frame_id>（与镜头1比对）
+预览镜头1首帧（建立基准）
+预览镜头2首帧（与镜头1比对）
 （依此类推，逐一比对）
 
 **每张图的检查要点**（与前一镜对比）：
@@ -161,9 +154,7 @@ Step 9：导出
 
 **操作步骤**：
 
-先通过 `get_state` 记录每个镜头的 `first_frame` asset_id：
-
-执行 get_state
+先获取项目状态，记录每个镜头的 `first_frame` asset_id：
 
 然后逐镜头设置尾帧（镜头 1 到倒数第二个）：
 
@@ -181,9 +172,7 @@ Step 9：导出
 
 **音频必须先于视频生成**（音频时长决定视频时长）：
 
-执行 click btn_pipeline_audio
-
-等待所有音频生成完成（10 秒间隔轮询）。
+生成音频，等待完成。
 
 > **音色克隆**：如需克隆特定音色，上传一段 5-10 秒参考音频，将返回的 `$asset_id` 写入角色的 `.voice` 字段，生成时自动克隆。
 
@@ -191,19 +180,13 @@ Step 9：导出
 
 ## Step 7：生成所有视频
 
-音频完成后，生成视频：
-
-执行 click btn_pipeline_videos
-
-等待所有视频生成完成（10 秒间隔轮询）。
+音频完成后，生成所有视频，等待完成。
 
 ---
 
 ## Step 8：预览验证
 
 逐个预览每个镜头，重点检查**镜头切换处**：
-
-执行 click shot.preview.<shot_id>
 
 **检查点**：
 - 相邻镜头切换处画面是否连续（无跳变）
@@ -218,9 +201,7 @@ Step 9：导出
 
 ## Step 9：导出
 
-所有镜头验证通过后导出：
-
-执行 click workspace.btn_export
+所有镜头验证通过后导出。
 
 ---
 

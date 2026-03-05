@@ -6,19 +6,12 @@
 
 ## 流程概览
 
-Step 0：调用 /ai-bridge 获取连接信息
 Step 1：竞品参考检索（WebSearch）+ 分析产品 + 输出分镜方案（自检后展示给用户，直接继续）
 Step 2：上传产品图，创建项目，发送脚本
 Step 3：Filter 检查
 Step 4：清除所有尾帧
 Step 5：生成音频（旁白为核心，BGM 辅助）
 Step 6：生成所有视频
-
----
-
-## Step 0：获取连接信息
-
-调用 `/ai-bridge` 获取 URL + SESSION。
 
 ---
 
@@ -255,15 +248,15 @@ BGM：[轻快/大气/简洁的配乐描述]
 俯视 45 度角，桌面纯白/浅灰，光线均匀
 ```
 
-发送后轮询（15-30 秒间隔）等待完成。
+发送后等待完成。
 
 ---
 
 ## Step 3：Filter 检查
 
-执行 click sidebar.filter_shots
-执行 click sidebar.filter_dialogs
-执行 click sidebar.filter_characters
+检查镜头
+检查台词
+检查角色
 
 **展示视频专项检查要点**：
 - 每个卖点镜头是否有对应旁白（`filter_dialogs` 检查台词是否完整）
@@ -285,9 +278,9 @@ BGM：[轻快/大气/简洁的配乐描述]
 
 ## Step 5：生成音频
 
-执行 click workspace.btn_pipeline_dialogs
+生成音频
 
-确认面板中所有项后点击确认，轮询等待完成。
+确认面板中所有项后点击确认，等待完成。
 
 ### 旁白是展示视频的信息骨架
 
@@ -319,9 +312,9 @@ BGM：[轻快/大气/简洁的配乐描述]
 
 ## Step 6：生成所有视频
 
-执行 click workspace.btn_pipeline_videos
+生成所有视频
 
-全选所有镜头后确认，轮询等待完成（10 秒间隔）。
+全选所有镜头后确认，等待完成。
 
 ---
 
