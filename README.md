@@ -1,13 +1,18 @@
 # Genra Video Creator
 
-AI skills that allow autonomous agents to control the [Genra](https://genra.ai) video creation platform.
+AI skills that allow autonomous agents to control the [Genra](https://genra.ai) video creation platform and generate different types of videos using **reusable best-practice workflows and templates**.
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Built-in Genra Agent](#built-in-genra-agent)
-- [Using Genra from External Agents](#using-genra-from-external-agents)
-- [Usage (Quick Start)](#usage-quick-start)
+- [Genra Video Creator](#genra-video-creator)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Built-in Genra Agent](#built-in-genra-agent)
+  - [Using Genra from External Agents](#using-genra-from-external-agents)
+  - [Usage (Quick Start)](#usage-quick-start)
+    - [Option 1 — Built-in Genra Agent](#option-1--built-in-genra-agent)
+    - [Option 2 — Any AI Agent](#option-2--any-ai-agent)
+    - [Option 3 — Claude Code (plugin)](#option-3--claude-code-plugin)
 
 ## Overview
 
@@ -15,7 +20,7 @@ AI skills that allow autonomous agents to control the [Genra](https://genra.ai) 
 
 Genra already includes a **built-in AI agent** inside the editor — users can start creating videos immediately without any setup.
 
-However, many developers prefer to work from their own AI agents. This repository exposes Genra's capabilities as **skills** — markdown instruction files that teach external agents how to control the editor via API.
+However, many developers prefer to work from their own AI agents. This repository exposes Genra's capabilities as **skills** — markdown instruction files that teach external agents how to control the editor via API，and **reuse sets of best workflows/templates to make different types of videos**.
 
 ## Built-in Genra Agent
 
@@ -43,14 +48,18 @@ https://github.com/genra-ai/video-creator/blob/main/plugins/genra/commands/start
 
 ### Option 3 — Claude Code (plugin)
 
+Install the plugin:
+
 ```bash
-# Install
 /plugin marketplace add genra-ai/video-creator
 /plugin install genra@genra-ai
+```
 
-# Run
+Connect to Genra:
+
+```bash
 /genra:start
 ```
 
-Claude Code loads Genra skills automatically.
+Once connected, all Genra skills are available as `/genra:<skill-name>` commands. Claude Code discovers them automatically after installation.
 
