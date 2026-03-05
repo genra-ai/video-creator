@@ -181,12 +181,7 @@ BGM：[节奏和情绪，如"轻快简洁电子配乐，BPM 120，无歌词"]
 
 **所有提供的产品图都需要上传**（多角度产品图支持更丰富的镜头描述）：
 
-```bash
-curl -s "${URL}" \
-  -F "session_key=${SESSION}" \
-  -F "file=@产品图.jpg"
-# 返回 {"asset_id":"xxx"}
-```
+上传 产品图.jpg → 获取 asset_id（每张图分别上传）
 
 记录每张图的 asset_id，在脚本中按镜头用途引用。
 
@@ -266,16 +261,9 @@ BGM：[轻快/大气/简洁的配乐描述]
 
 ## Step 3：Filter 检查
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_shots"}'
-
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_dialogs"}'
-
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_characters"}'
-```
+执行 click sidebar.filter_shots
+执行 click sidebar.filter_dialogs
+执行 click sidebar.filter_characters
 
 **展示视频专项检查要点**：
 - 每个卖点镜头是否有对应旁白（`filter_dialogs` 检查台词是否完整）
@@ -297,10 +285,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 ## Step 5：生成音频
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"workspace.btn_pipeline_dialogs"}'
-```
+执行 click workspace.btn_pipeline_dialogs
 
 确认面板中所有项后点击确认，轮询等待完成。
 
@@ -334,10 +319,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 ## Step 6：生成所有视频
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"workspace.btn_pipeline_videos"}'
-```
+执行 click workspace.btn_pipeline_videos
 
 全选所有镜头后确认，轮询等待完成（10 秒间隔）。
 
@@ -380,9 +362,3 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 | 独立站/YouTube 商品视频 | 1280×720（16:9）|
 | 小红书方形展示 | 720×720（1:1）|
 
-## 轮询等待
-
-长操作返回 `{"id":"xxx"}`，轮询：`curl -s "${URL}?id=<id>"`
-
-- `chat.btn_send`：15-30 秒间隔
-- 图片/视频/音频生成：10 秒间隔

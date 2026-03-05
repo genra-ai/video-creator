@@ -178,23 +178,10 @@ BGM：[情绪描述]
 
 依次检查以下 filter，发现问题立即用 `edit` 修改 editableFields，**不要攒到最后才看**：
 
-```bash
-# 检查镜头（景别、运镜是否被正确解析）
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_shots"}'
-
-# 检查台词（台词归属是否正确：谁说的不能串）
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_dialogs"}'
-
-# 检查角色（最重要：每个角色的 identity_anchor 在所有镜头中必须一致）
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_characters"}'
-
-# 检查场景
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_locations"}'
-```
+执行 click sidebar.filter_shots（检查镜头：景别、运镜是否被正确解析）
+执行 click sidebar.filter_dialogs（检查台词：台词归属是否正确）
+执行 click sidebar.filter_characters（检查角色：identity_anchor 在所有镜头必须一致）
+执行 click sidebar.filter_locations（检查场景）
 
 ### 检查重点
 
@@ -220,10 +207,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 ### ① 检查哪些帧已有图片
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_shots"}'
-```
+执行 click sidebar.filter_shots
 
 - 若有 `img: false` 的帧 → 只选中缺失的帧，通过 `sidebar.btn_generate` 补生成
 - 所有首帧 `img: true` 后，进入一致性检查
@@ -232,10 +216,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 从 `get_state` 或 `filter_characters` 列出每个角色出现的所有镜头，按角色分组逐组预览：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"frame.preview.<frame_id>"}'
-```
+执行 click frame.preview.<frame_id>
 
 **同一角色所有镜头横向对比**，重点检查：
 
@@ -296,10 +277,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 **音频必须先于视频生成**（音频时长决定视频时长）：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"btn_pipeline_audio"}'
-```
+执行 click btn_pipeline_audio
 
 ### 多角色声音方向
 
@@ -335,10 +313,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 音频完成后，生成视频：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"btn_pipeline_videos"}'
-```
+执行 click btn_pipeline_videos
 
 等待所有视频生成完成（10 秒间隔轮询）。
 
@@ -348,10 +323,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 逐个预览，重点检查**场景切换处**和**同场景衔接处**：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"shot.preview.<shot_id>"}'
-```
+执行 click shot.preview.<shot_id>
 
 **检查点**：
 - **场景切换处**：切换是否干净自然
@@ -365,10 +337,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 所有镜头验证通过后导出：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"workspace.btn_export"}'
-```
+执行 click workspace.btn_export
 
 ---
 
@@ -489,9 +458,3 @@ S0 Pipeline 可自动识别和转换以下格式，无需 Claude 手动处理：
 - **英文分镜脚本**（含时间码、景别标注：INT./EXT.、CLOSE-UP 等）
 - **越南文/俄文等叙事文字稿**（自动作为 novel 类型处理，S0 自动转换为 shotlist）
 
-## 轮询等待
-
-长操作返回 `{"id":"xxx"}`，轮询：`curl -s "${URL}?id=<id>"`
-
-- `chat.btn_send`：15-30 秒间隔
-- 图片/视频/音频生成：10 秒间隔

@@ -81,23 +81,10 @@ Step 9：导出
 
 依次检查以下 filter，发现问题立即用 `edit` 修改 editableFields，不要攒到最后才看：
 
-```bash
-# 检查镜头
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_shots"}'
-
-# 检查台词
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_dialogs"}'
-
-# 检查角色（最重要：确认所有镜头角色描述一致）
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_characters"}'
-
-# 检查场景
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_locations"}'
-```
+执行 click sidebar.filter_shots
+执行 click sidebar.filter_dialogs
+执行 click sidebar.filter_characters（确认所有镜头角色描述一致）
+执行 click sidebar.filter_locations
 
 **检查重点**：
 - 所有镜头景别一致（中景，固定机位）
@@ -113,10 +100,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 **① 检查哪些帧已有图片**（`img: true`），哪些缺失（`img: false`）：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_shots"}'
-```
+执行 click sidebar.filter_shots
 
 查看返回的 frames 列表：
 - 若有 `img: false` 的帧 → 只选中缺失的帧，通过 `sidebar.btn_generate` 补生成
@@ -126,17 +110,9 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 **核心原则**：以镜头1为基准，从镜头2开始，每张图都要与上一张比对，不一致立即修正，**不要等到最后才批量处理**。
 
-```bash
-# 先预览镜头1（建立基准）
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"frame.preview.<shot_1_start_frame_id>"}'
-
-# 关闭后预览镜头2，与镜头1比对
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"frame.preview.<shot_2_start_frame_id>"}'
-
-# 依此类推，逐一比对
-```
+执行 click frame.preview.<shot_1_start_frame_id>（建立基准）
+执行 click frame.preview.<shot_2_start_frame_id>（与镜头1比对）
+（依此类推，逐一比对）
 
 **每张图的检查要点**（与前一镜对比）：
 1. **景深/焦距是否一致**：背景虚化程度是否相同，不能一张很浅景深、另一张背景清晰
@@ -187,10 +163,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 先通过 `get_state` 记录每个镜头的 `first_frame` asset_id：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"get_state"}'
-```
+执行 get_state
 
 然后逐镜头设置尾帧（镜头 1 到倒数第二个）：
 
@@ -208,10 +181,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 **音频必须先于视频生成**（音频时长决定视频时长）：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"btn_pipeline_audio"}'
-```
+执行 click btn_pipeline_audio
 
 等待所有音频生成完成（10 秒间隔轮询）。
 
@@ -223,10 +193,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 音频完成后，生成视频：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"btn_pipeline_videos"}'
-```
+执行 click btn_pipeline_videos
 
 等待所有视频生成完成（10 秒间隔轮询）。
 
@@ -236,10 +203,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 逐个预览每个镜头，重点检查**镜头切换处**：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"shot.preview.<shot_id>"}'
-```
+执行 click shot.preview.<shot_id>
 
 **检查点**：
 - 相邻镜头切换处画面是否连续（无跳变）
@@ -256,10 +220,7 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 
 所有镜头验证通过后导出：
 
-```bash
-curl -s "${URL}" -H "Content-Type: application/json" \
-  -d '{"session_key":"${SESSION}","action":"click","target":"workspace.btn_export"}'
-```
+执行 click workspace.btn_export
 
 ---
 
@@ -289,9 +250,3 @@ curl -s "${URL}" -H "Content-Type: application/json" \
 - BGM 描述在 `global.bgm` 字段，需要背景音乐时别忘了设置
 - **口播视频必须用较快语速**：在角色的 voice 字段中注明「语速较快」，否则生成的音频语速偏慢，与口播节奏不符
 
-## 轮询等待
-
-长操作返回 `{"id":"xxx"}`，轮询：`curl -s "${URL}?id=<id>"`
-
-- `chat.btn_send`：15-30 秒间隔
-- 图片/视频/音频生成：10 秒间隔
