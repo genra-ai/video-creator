@@ -1,10 +1,10 @@
 # Genra Video Creator
 
-AI skills that allow autonomous agents to control the [Genra](https://genra.ai) video editor.
+AI skills that allow autonomous agents to control the [Genra](https://genra.ai) video creation platform.
 
 ## Overview
 
-[Genra](https://genra.ai) is an AI video editor for creating and editing video projects, generating clips, voiceovers, background music, and exporting final videos.
+[Genra](https://genra.ai) is an AI video creation platform for creating and editing video projects, generating clips, voiceovers, background music, and exporting final videos.
 
 Genra already includes a **built-in AI agent** inside the editor — most users can start creating videos immediately without any setup.
 
