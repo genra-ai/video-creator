@@ -1,0 +1,297 @@
+# 口播视频 — AI Bridge 工作流
+
+生成 20-30 秒口播视频：真人风格，面向镜头讲话，固定景别，相邻镜头首尾帧连续。需要先调用 `/ai-bridge` 获取连接信息。
+
+## 流程概览
+
+```
+Step 0：调用 /ai-bridge 获取连接信息
+Step 1：根据用户主题生成剧本（4-6 段台词）
+Step 2：创建项目，一次性发送 ICT
+Step 3：Filter 检查
+Step 4：生成所有镜头图片，逐张检查一致性
+Step 5：设置首尾帧（相邻镜头衔接）
+Step 6：生成音频
+Step 7：生成所有视频
+Step 8：预览验证
+Step 9：导出
+```
+
+---
+
+## Step 0：获取连接信息
+
+调用 `/ai-bridge` 获取 URL + SESSION。
+
+---
+
+## Step 1：生成剧本
+
+根据用户描述的主题，生成口播剧本：
+
+**输出内容**：
+- 口播稿（口语化，20-30 秒能自然读完）
+- 拆分为 **4-6 段台词**，每段对应一个镜头（每段 4-6 秒可说完）
+- **固定角色外观**：发型颜色、服装、肤色（后续所有镜头复用，不得更改）
+- **固定场景**：背景、光线（所有镜头相同，突出人物，背景简洁）
+
+**台词要求**：口语化、连贯，像真人对着镜头说话，不像广告词。
+
+---
+
+## Step 2：创建项目，发送 ICT
+
+用 `chat.btn_send` 发一条消息，**一次性包含全部镜头**，**每个镜头第一次发送时就必须带台词**（漏了后面补很麻烦）：
+
+```
+请创建一个口播视频项目，语言中文，16:9 横版。
+
+角色：[角色名]，[具体外观描述：发型/服装/肤色]，面向镜头说话，语速较快
+
+场景：[背景描述]，[光线描述]，干净简洁，突出人物
+
+镜头1（5秒）：中景，人物面向镜头，[当前表情/动作状态]
+台词：「[台词1]」
+
+镜头2（5秒）：中景，人物面向镜头，[当前表情/动作状态]
+台词：「[台词2]」
+
+镜头3（5秒）：中景，人物面向镜头，[当前表情/动作状态]
+台词：「[台词3]」
+
+镜头4（5秒）：中景，人物面向镜头，[当前表情/动作状态]
+台词：「[台词4]」
+
+（视剧本长度增加到6个镜头）
+
+注意：
+- 所有镜头使用同一个角色、同一个场景
+- 景别固定为中景，不变换机位，不推拉
+- 人物在画面中的大小和位置完全一致：胸部以上居中，人物占画面高度约 70%，人物始终面向镜头正面
+- 所有镜头焦距、景深、拍摄距离完全相同，背景虚化程度一致
+- 禁止任何镜头有拉近/拉远/推进效果，保持固定焦距
+- 所有镜头背景环境完全一致：背景中的物品摆放、装饰细节、灯光位置和颜色均保持不变，不得在不同镜头中出现或消失任何背景元素
+```
+
+发送后轮询（15-30 秒间隔）等待完成，再 `get_state` 获取项目状态。
+
+---
+
+## Step 3：Filter 检查
+
+依次检查以下 filter，发现问题立即用 `edit` 修改 editableFields，不要攒到最后才看：
+
+```bash
+# 检查镜头
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_shots"}'
+
+# 检查台词
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_dialogs"}'
+
+# 检查角色（最重要：确认所有镜头角色描述一致）
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_characters"}'
+
+# 检查场景
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_locations"}'
+```
+
+**检查重点**：
+- 所有镜头景别一致（中景，固定机位）
+- 所有镜头使用同一 character_id 和 location_id
+- 每个镜头对应一条 dialog，台词内容正确
+- 角色描述在所有镜头中完全一致
+
+---
+
+## Step 4：检查并补全图片，逐镜校准景深一致性
+
+**先检查，再按需生成**——ICT 创建时编辑器会自动生成首帧图片，不要无脑全量重新生成。
+
+**① 检查哪些帧已有图片**（`img: true`），哪些缺失（`img: false`）：
+
+```bash
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"sidebar.filter_shots"}'
+```
+
+查看返回的 frames 列表：
+- 若有 `img: false` 的帧 → 只选中缺失的帧，通过 `sidebar.btn_generate` 补生成
+- 所有首帧 `img: true` 后，进入下一步逐张一致性检查
+
+**② 逐张预览，从镜头2起与前一镜比对景深/人物大小**：
+
+**核心原则**：以镜头1为基准，从镜头2开始，每张图都要与上一张比对，不一致立即修正，**不要等到最后才批量处理**。
+
+```bash
+# 先预览镜头1（建立基准）
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"frame.preview.<shot_1_start_frame_id>"}'
+
+# 关闭后预览镜头2，与镜头1比对
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"frame.preview.<shot_2_start_frame_id>"}'
+
+# 依此类推，逐一比对
+```
+
+**每张图的检查要点**（与前一镜对比）：
+1. **景深/焦距是否一致**：背景虚化程度是否相同，不能一张很浅景深、另一张背景清晰
+2. **人物大小/位置是否一致**：人物在画面中的高度比例、胸部截止位置是否相同
+3. **拍摄距离感是否相同**：人物不能时近时远，像镜头在推拉
+4. 人物外观一致（发型/服装/肤色）
+
+**判断标准**：
+- ✅ **基本一致** → 继续检查下一镜，无需修改
+- ❌ **明显不一致**（景深差异大/人物大小明显不同）→ 立即用 I2I 修正
+
+**③ 不一致时：用前一镜图片作为参考，通过 I2I 重新生成**：
+
+当某镜头图片与前一镜景深/人物大小不一致时：
+
+1. 记录前一镜的图片 URL（从 `previewPanel.imageUrl` 获取）
+2. 在该问题镜头的预览面板 I2I 输入框中描述修改意图：
+   ```
+   描述示例：「保持人物外观和动作不变，调整景深和拍摄距离与参考图一致，人物大小占画面比例与参考图相同，背景虚化程度相同」
+   ```
+3. 通过 `chat.btn_send` 发消息，明确指出哪个镜头有问题、要参考哪个镜头的视角：
+   ```
+   发消息：「请参考镜头N的图片，重新生成镜头M，调整到相同的拍摄距离、景深和人物大小，其他内容保持不变」
+   ```
+4. 等待生成完成，再预览比对
+5. **最多只重试 1 次**——若重新生成后仍不一致，接受现状继续，不要反复循环
+
+**④ 全部镜头检查完成（或已达重试上限）后，进入 Step 5 设置首尾帧。**
+
+**常见问题**：图片生成器可能忽略服装颜色/发型细节，或光线风格跑偏——对照 `filter_characters` 和 `filter_shots` 逐张核查，不要凭印象跳过。景深不一致是视频衔接时出现推拉感的根本原因，必须在这一步解决。
+
+---
+
+## Step 5：设置首尾帧（关键！）
+
+**原理**：
+```
+生成 N 张图片后：
+  镜头1 [首帧=图1, 尾帧=图2]   ← 尾帧=镜头2的首帧
+  镜头2 [首帧=图2, 尾帧=图3]   ← 尾帧=镜头3的首帧
+  ...
+  镜头N [首帧=图N, 尾帧=图N]   ← 最后一镜首尾相同，保持默认
+
+→ 相邻镜头衔接处是同一张图，视频连贯无跳变
+```
+
+**操作步骤**：
+
+先通过 `get_state` 记录每个镜头的 `first_frame` asset_id：
+
+```bash
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"get_state"}'
+```
+
+然后逐镜头设置尾帧（镜头 1 到倒数第二个）：
+
+```
+发消息：「请把镜头N的尾帧（tail_frame）设为 $<shot_N+1的first_frame_asset_id>」
+```
+
+发送后等待，再 `get_state` 验证 tail_frame 字段是否符合预期。若不一致，重发消息，最多重试 3 次。
+
+**最后一个镜头**：尾帧保持默认（等于自身首帧），不需要设置。
+
+---
+
+## Step 6：生成音频
+
+**音频必须先于视频生成**（音频时长决定视频时长）：
+
+```bash
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"btn_pipeline_audio"}'
+```
+
+等待所有音频生成完成（10 秒间隔轮询）。
+
+> **音色克隆**：如需克隆特定音色，上传一段 5-10 秒参考音频，将返回的 `$asset_id` 写入角色的 `.voice` 字段，生成时自动克隆。
+
+---
+
+## Step 7：生成所有视频
+
+音频完成后，生成视频：
+
+```bash
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"btn_pipeline_videos"}'
+```
+
+等待所有视频生成完成（10 秒间隔轮询）。
+
+---
+
+## Step 8：预览验证
+
+逐个预览每个镜头，重点检查**镜头切换处**：
+
+```bash
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"shot.preview.<shot_id>"}'
+```
+
+**检查点**：
+- 相邻镜头切换处画面是否连续（无跳变）
+- 人物姿态/位置是否自然衔接
+- 每段台词与视频时长是否匹配
+
+若某镜头首尾帧不连贯：
+1. 重新设置该镜头的尾帧（参考 Step 5）
+2. 只重新生成该镜头视频
+
+---
+
+## Step 9：导出
+
+所有镜头验证通过后导出：
+
+```bash
+curl -s "${URL}" -H "Content-Type: application/json" \
+  -d '{"session_key":"${SESSION}","action":"click","target":"workspace.btn_export"}'
+```
+
+---
+
+## ICT 规范
+
+| 字段 | 规范 |
+|------|------|
+| shots 数量 | 4-6 个 |
+| 每个 shot 时长 | 4-6 秒 |
+| shot description | 固定中景，面向镜头，只描述表情/动作/说话状态，不涉及运镜或景别变化 |
+| character_id | 所有 shot 使用同一个 |
+| location_id | 所有 shot 使用同一个 |
+| dialog type | 角色本人说话（非旁白） |
+| dialog 台词 | 口语化，4-6 秒内可自然说完 |
+| 角色语速 | 较快语速（在角色 voice 字段描述中注明「语速较快」） |
+
+---
+
+## 关键经验
+
+- **每个镜头第一次发送就带台词**，漏了后面补很麻烦
+- **发送后立即 filter 检查**，不要攒到最后才看
+- 图片生成后在 `filter_characters` 下集中检查同一角色跨镜头的外观一致性
+- **景深不一致是视频推拉感的根本原因**：Step 4 必须从镜头2开始逐张与前一镜比对景深和人物大小，不一致立即用 I2I + 参考前一镜重新生成，全部通过后才做 Step 5
+- **Step 5 首尾帧设置完成后必须 `get_state` 逐镜验证**，确认 tail_frame 正确后再生成视频
+- **undo/redo**：`workspace.btn_undo` / `workspace.btn_redo` 可回退误操作，项目出问题时优先尝试 undo
+- BGM 描述在 `global.bgm` 字段，需要背景音乐时别忘了设置
+- **口播视频必须用较快语速**：在角色的 voice 字段中注明「语速较快」，否则生成的音频语速偏慢，与口播节奏不符
+
+## 轮询等待
+
+长操作返回 `{"id":"xxx"}`，轮询：`curl -s "${URL}?id=<id>"`
+
+- `chat.btn_send`：15-30 秒间隔
+- 图片/视频/音频生成：10 秒间隔
