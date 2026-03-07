@@ -7,7 +7,7 @@ Control the Genra AI video editor. Create and edit video projects, generate clip
 Call `get_state` without a session key. Show the returned `login_url` to the user, poll until authorized.
 
 ```bash
-curl -s -X POST https://agent.genra.ai/ -H "Content-Type: application/json" \
+curl -s -X POST https://action.genra.ai/ -H "Content-Type: application/json" \
   -d '{"action":"get_state"}'
 ```
 
@@ -16,7 +16,7 @@ After auth, `get_state` returns project list with clickable chat targets. Click 
 ## Commands
 
 ```bash
-curl -s -X POST https://agent.genra.ai/ -H "Content-Type: application/json" \
+curl -s -X POST https://action.genra.ai/ -H "Content-Type: application/json" \
   -d '{"session_key":"SK","action":"...","target":"..."}'
 ```
 
@@ -33,7 +33,7 @@ curl -s -X POST https://agent.genra.ai/ -H "Content-Type: application/json" \
 ## Upload
 
 ```bash
-curl -s -X POST https://agent.genra.ai/upload \
+curl -s -X POST https://action.genra.ai/upload \
   -F "session_key=SK" -F "file=@path"
 ```
 
