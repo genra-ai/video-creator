@@ -1,445 +1,444 @@
 # Script to Video
 
-将用户提供的多镜头剧本（6-15 镜头、多角色、多场景）转为视频。**不重写剧本**，只补全视觉信息后直接发送给 S0 Pipeline 执行。
+Converts a multi-shot script provided by the user (6–15 shots, multiple characters, multiple scenes) into a video. **Does not rewrite the script** — only supplements visual information, then sends it directly to the S0 Pipeline for execution.
 
-## 流程概览
-
-```
-Step 1：分析剧本，补全角色/场景视觉描述
-Step 2：创建项目，发送完整剧本消息（含补全信息）
-Step 3：Filter 检查（重点：角色一致性、台词归属）
-Step 4：检查并补全图片，按角色分组检查外观一致性
-Step 5：清除所有尾帧（只保留首帧）
-Step 6：生成音频（多角色各自音色）
-Step 7：生成所有视频
-Step 8：预览验证
-Step 9：导出
-```
-
----
-
-## Step 1：分析剧本，补全视觉信息
-
-**不要重写用户的剧本**。S0 Pipeline 会自动把 script/shotlist 转换为 ICT，Claude 的任务是**在发送前补全视觉信息**。
-
-### ⚠️ 画风优先识别
-
-**画风是最高优先级设定**，绝不能被默认的"写实电影感"覆盖。
-
-- 从用户输入的任何位置提取画风关键词（动漫、二次元、国漫、漫画、写实、电影感等）
-- 用户明确指定的画风 > 默认写实；若描述相互矛盾（如"动漫"又说"真实人像"），先询问用户再继续
-- 在 Step 2 prompt **第一行**单独写明：`画风：[用户指定的画风描述]`
-
----
-
-### 角色描述公式
-
-角色描述直接决定跨镜头的视觉一致性。描述越模糊，生成器发挥空间越大，外形漂移越严重。
-
-**公式**：`[年龄感+性别] + [发型：长度+质地+颜色+造型] + [肤色+明显特征] + [上装：颜色+材质+款式] + [下装] + [标志性细节]`
-
-| 维度 | ❌ 太模糊 | ✅ 够用 |
-|------|----------|--------|
-| 发型 | 黑发 | 及肩直发微卷、纯黑色、无刘海 |
-| 服装 | 白衬衫 | 米白色宽松棉质衬衫（卷袖口），未束入裤腰 |
-| 肤色 | 白皙 | 白皙细腻、无雀斑，淡粉色唇色 |
-| 标志性细节 | — | 左耳银色小圆耳钉（唯一首饰） |
-
-**标志性细节的作用**：给模型一个**跨镜头 anchor**——每次生成时模型会试图重现这个细节，比泛泛的"白衬衫"更能保持一致性。推荐选：眼镜、特定发饰、戒指、项链、服装上的图案。
-
-**颜色要精确**：AI 经常把白色生成成米色、把深蓝生成成黑色。用参照物辅助描述：
-- "纯白色（类似打印纸白）"
-- "深海军蓝（不是黑色）"
-- "砖红色（类似复古红砖）"
-
-### 场景描述公式
-
-**公式**：`[地点类型] + [时间/光线来源] + [光线质感+色温] + [环境关键元素] + [氛围色调]`
-
-**光线是场景情绪的核心**，常见剧情场景光线参考：
-
-| 情境 | 光线描述 |
-|------|---------|
-| 温馨居家 | 暖色台灯侧光，柔和漫射，橙黄色调（3000K），无硬阴影 |
-| 紧张对峙 | 单侧强硬光，高对比度阴影，冷白或蓝灰色调 |
-| 浪漫室外 | 黄金时段逆光，发丝轮廓光，暖橙色调，镜头边缘轻微光晕 |
-| 悲伤压抑 | 阴天散射光，蓝灰色漫射，低饱和度，无强高光 |
-| 城市夜景 | 街灯橙色下射 + 霓虹色补光，背景光斑，湿地面反光 |
-| 商务正式 | 正面均匀白光，色温中性，环境清晰，阴影柔和 |
-
-### 全局信息补充
-
-- **视觉风格**：影响整体画面基调，常用：「写实电影感」「日系清新写实」「港片质感（胶片颗粒+高对比）」「欧美剧质感」「轻动画风」
-- **BGM 情绪**：「低沉弦乐+钢琴（压抑悬疑）」「轻快吉他（日常温馨）」「史诗管弦（宏大情绪）」
-
-### 确认语言与分辨率
-
-根据剧本语言判断；默认 16:9 横版（竖版请用户说明）。
-
-### 输出：向用户展示补全结果，直接进入 Step 2
-
-向用户展示以下格式的补全预览，**无需等待用户确认，直接继续执行 Step 2**：
+## Workflow Overview
 
 ```
-【视觉补全预览】
-
-全局视觉风格：写实电影感，色调偏冷
-BGM：低沉钢琴 + 细弦乐，带压抑悬疑感
-
-角色设定：
-- 林晓：25岁亚裔女性，及肩直发微卷、纯黑色、无刘海，白皙肤色，
-  米白色宽松棉质衬衫（卷袖口）+ 浅灰色直筒裤，左耳银色小圆耳钉
-- 陈明：32岁男性，短发偏分、深棕色，略有倦色，深海军蓝西装外套 +
-  白衬衫（未系领带），黑色西裤，无配饰
-
-场景设定：
-- 咖啡馆：室内，落地窗旁木质桌椅，午后斜射自然光（左侧入射），暖黄色
-  调，简约北欧风，背景模糊人影
-- 街道：室外夜晚，路灯橙色下射光，地面轻微积水反光，背景霓虹
-  灯牌虚化，行人稀少
-
-（以上为视觉补全，正在发送剧本……）
+Step 1: Analyze script, supplement character/scene visual descriptions
+Step 2: Create project, send the complete script message (including supplemented information)
+Step 3: Filter check (focus: character consistency, dialogue attribution)
+Step 4: Check and supplement images, check appearance consistency grouped by character
+Step 5: Clear all tail frames (keep only start frames)
+Step 6: Generate audio (individual voice for each character)
+Step 7: Generate all videos
+Step 8: Preview verification
+Step 9: Export
 ```
 
 ---
 
-## Step 2：创建项目，发送完整剧本消息
+## Step 1: Analyze Script, Supplement Visual Information
 
-用 `chat.btn_send` 发送消息。
+**Do not rewrite the user's script**. The S0 Pipeline will automatically convert script/shotlist into ICT; Claude's task is to **supplement visual information before sending**.
 
-### 镜头数 ≤ 12：一次发送全部
+### ⚠️ Art style takes highest priority
+
+**Art style is the highest-priority setting** and must never be overridden by the default "realistic cinematic" style.
+
+- Extract art style keywords from anywhere in the user's input (anime, 2D animation, Chinese animation, comic, realistic, cinematic, etc.)
+- User-specified art style > default realistic; if descriptions conflict (e.g., "anime" alongside "real portrait"), ask the user before proceeding
+- In the Step 2 prompt, write the art style on its own on the **first line**: `Art style: [user-specified art style description]`
+
+---
+
+### Character Description Formula
+
+Character descriptions directly determine visual consistency across shots. The vaguer the description, the more room the generator has to improvise, and the more severe the appearance drift.
+
+**Formula**: `[approximate age + gender] + [hair: length + texture + color + styling] + [skin tone + distinctive features] + [top: color + material + style] + [bottom] + [signature detail]`
+
+| Dimension | ❌ Too vague | ✅ Sufficient |
+|-----------|-------------|--------------|
+| Hair | Black hair | Shoulder-length slightly wavy straight hair, pure black, no bangs |
+| Clothing | White shirt | Off-white loose cotton shirt (rolled sleeves), not tucked in |
+| Skin tone | Fair | Fair and smooth, no freckles, light pink lip color |
+| Signature detail | — | Small silver round stud earring on the left ear (only accessory) |
+
+**The role of a signature detail**: gives the model a **cross-shot anchor** — each time the model generates, it will try to reproduce this detail, which maintains consistency far better than vague descriptions like "white shirt". Recommended choices: glasses, specific hair accessory, ring, necklace, pattern on clothing.
+
+**Colors must be precise**: AI frequently generates white as off-white, and dark blue as black. Use reference objects to assist:
+- "Pure white (like printer paper white)"
+- "Deep navy blue (not black)"
+- "Brick red (like vintage red brick)"
+
+### Scene Description Formula
+
+**Formula**: `[location type] + [time / light source] + [light quality + color temperature] + [key environmental elements] + [atmospheric tone]`
+
+**Lighting is the core of scene mood**. Common scene lighting references for dramatic content:
+
+| Situation | Lighting Description |
+|-----------|----------------------|
+| Warm and homey | Warm side-lamp light, soft diffused, orange-yellow tone (3000K), no hard shadows |
+| Tense confrontation | Single harsh side light, high-contrast shadows, cool white or blue-gray tone |
+| Romantic outdoors | Golden hour backlight, hair rim light, warm orange tone, subtle lens flare at edges |
+| Sad and oppressive | Overcast diffused light, blue-gray diffusion, low saturation, no strong highlights |
+| Urban night scene | Street lamp orange downlight + neon color fill, background bokeh, wet ground reflections |
+| Formal business | Even front white light, neutral color temperature, clear environment, soft shadows |
+
+### Global Information Supplement
+
+- **Visual style**: affects the overall visual tone. Common options: "realistic cinematic," "Japanese fresh-realistic," "Hong Kong film aesthetic (film grain + high contrast)," "Western TV drama quality," "light animated style"
+- **BGM mood**: "low strings + piano (oppressive/suspenseful)," "upbeat guitar (everyday warmth)," "epic orchestral (grand emotion)"
+
+### Confirm Language and Resolution
+
+Determine from the script language; default is 16:9 landscape (specify if vertical is needed).
+
+### Output: Show supplementation results to user, then proceed directly to Step 2
+
+Show the user the following format as a supplementation preview, **then proceed directly to Step 2 without waiting for confirmation**. If the user has changes, they can send a message:
 
 ```
-请根据以下剧本创建视频项目，[语言]，[分辨率]。
+[Visual Supplement Preview]
 
-全局视觉风格：[风格描述]
-BGM：[情绪描述]
+Global visual style: Realistic cinematic, cool-leaning tone
+BGM: Low piano + thin strings, with a sense of oppressive suspense
 
-角色设定：
-- [角色名]：[按公式补全的完整外形描述]
-- [角色名]：[外形描述]
+Character settings:
+- Lin Xiao: Asian female, approx. 25, shoulder-length slightly wavy hair, pure black, no bangs, fair skin,
+  off-white loose cotton shirt (rolled sleeves) + light gray straight-leg trousers, small silver round stud on left ear
+- Chen Ming: Male, approx. 32, short side-parted hair, dark brown, slightly weary appearance, deep navy blue blazer +
+  white shirt (no tie), black dress trousers, no accessories
 
-场景设定：
-- [场景名]：[按公式补全的光线+环境描述]
-- [场景名]：[环境描述]
+Scene settings:
+- Café: interior, wooden table and chairs by floor-to-ceiling windows, afternoon diagonal natural light (entering from left), warm yellow
+  tone, simple Nordic style, blurred figures in background
+- Street: exterior at night, orange downlight from street lamps, light puddle reflections on ground, neon
+  signage softly blurred in background, sparse pedestrians
 
-图像生成要求：每个镜头对应单一时间点的完整电影构图，整张图为一个连续场景，不含分割线或多视角并列。每个镜头只需首帧，**不要设置尾帧（tail_frame）**。
-
---- 以下为剧本原文 ---
-[用户原始剧本，不做任何修改]
+(The above is the visual supplement. Sending script now...)
 ```
 
-### 镜头数 > 12：分两条发送
+---
 
-**第一条**（前 8 镜头 + 所有角色/场景定义）：
+## Step 2: Create Project, Send Complete Script Message
+
+Use `chat.btn_send` to send the message.
+
+### Shot count ≤ 12: send all at once
 
 ```
-请根据以下剧本创建视频项目，[语言]，[分辨率]。
+Please create a video project based on the following script, [language], [resolution].
 
-全局视觉风格：[风格描述]
-BGM：[情绪描述]
+Global visual style: [style description]
+BGM: [mood description]
 
-角色设定：
-- [角色名]：[完整外形描述]
+Character settings:
+- [character name]: [complete appearance description supplemented using the formula]
+- [character name]: [appearance description]
+
+Scene settings:
+- [scene name]: [complete lighting + environment description supplemented using the formula]
+- [scene name]: [environment description]
+
+Image generation requirements: Each shot corresponds to a single point-in-time complete cinematic composition; the whole image is one continuous scene with no dividing lines or multi-angle juxtaposition. Each shot requires only the start frame; **do not set a tail frame (tail_frame)**.
+
+--- Original script follows below ---
+[User's original script, unmodified]
+```
+
+### Shot count > 12: send in two messages
+
+**First message** (first 8 shots + all character/scene definitions):
+
+```
+Please create a video project based on the following script, [language], [resolution].
+
+Global visual style: [style description]
+BGM: [mood description]
+
+Character settings:
+- [character name]: [complete appearance description]
 ...
 
-场景设定：
-- [场景名]：[完整环境+光线描述]
+Scene settings:
+- [scene name]: [complete environment + lighting description]
 ...
 
---- 以下为第一部分剧本（共[N]个镜头，先发前8个）---
-[剧本前8个镜头的原文]
+--- Part 1 of the script follows below (total [N] shots, sending first 8) ---
+[Original text of the first 8 shots]
 ```
 
-等待完成后，**第二条**（剩余镜头 + 重复角色外形以强化一致性）：
+After waiting for completion, send the **second message** (remaining shots + repeat character appearances to reinforce consistency):
 
 ```
-请继续添加剩余镜头：
+Please continue adding the remaining shots:
 
-角色外形提醒（与前面保持完全一致）：
-- [角色名]：[重复关键外形，尤其是标志性细节]
+Character appearance reminder (keep exactly consistent with the above):
+- [character name]: [repeat key appearance details, especially signature details]
 
---- 以下为第二部分剧本 ---
-[剩余镜头原文]
+--- Part 2 of the script follows below ---
+[Original text of remaining shots]
 ```
 
-发送后等待完成，再获取项目状态。
+Send and wait for completion, then retrieve project status.
 
 ---
 
-## Step 3：Filter 检查
+## Step 3: Filter Check
 
-依次检查以下 filter，发现问题立即用 `edit` 修改 editableFields，**不要攒到最后才看**：
+Check the following filters in order; fix any issues immediately using `edit` on editableFields — **do not save them all for the end**:
 
-检查镜头（景别、运镜是否被正确解析）
-检查台词（台词归属是否正确）
-检查角色（identity_anchor 在所有镜头必须一致）
-检查场景
+Check shots (whether framing and camera movement are parsed correctly)
+Check dialogue (whether dialogue attribution is correct)
+Check characters (identity_anchor must be consistent across all shots)
+Check scenes
 
-### 检查重点
+### Check Focus
 
-**`filter_characters`**（最重要）：
-- 同一角色在不同镜头中的 `identity_anchor` 描述必须完全一致
-- 重点检查：发型颜色、服装颜色、标志性细节是否在所有镜头中一字不差
-- 若某镜头角色描述与其他镜头不一致，立即用 `edit` 统一
+**`filter_characters`** (most important):
+- The `identity_anchor` description for the same character must be completely identical across all shots
+- Pay special attention to: hair color, clothing color, signature details — must be word-for-word the same in all shots
+- If a shot's character description is inconsistent with others, immediately use `edit` to unify it
 
-**`filter_dialogs`**：
-- 每条台词的 `character_id` 是否归属正确角色（对话戏中谁说的不能串）
-- 旁白（narrator）类型台词不能被错误归属为某角色
+**`filter_dialogs`**:
+- Is each line's `character_id` attributed to the correct character (in dialogue scenes, who said what cannot be mixed up)
+- Narration-type lines (narrator) must not be incorrectly attributed to a specific character
 
-**`filter_shots`**：
-- 景别是否被正确解析（全景/中景/近景/特写 对应剧本描述）
-- 对话镜头的时长：必须 ≥ 台词自然朗读时长 + 0.5 秒缓冲，检查是否过短
-- 反应镜头（无台词）：建议 2-3 秒，太短情绪落不住
-
----
-
-## Step 4：检查并补全图片，按角色分组检查一致性
-
-**先检查，再按需生成**——ICT 创建时编辑器会自动生成首帧图片，不要无脑全量重新生成。
-
-### ① 检查哪些帧已有图片
-
-检查镜头
-
-- 若有 `img: false` 的帧 → 只选中缺失的帧，通过 `sidebar.btn_generate` 补生成
-- 所有首帧 `img: true` 后，进入一致性检查
-
-### ② 按角色分组检查外观一致性
-
-从项目状态或角色过滤器列出每个角色出现的所有镜头，按角色分组逐组预览：
-
-逐帧预览
-
-**同一角色所有镜头横向对比**，重点检查：
-
-| 检查项 | 常见偏差 | 处理 |
-|--------|---------|------|
-| 服装颜色 | 白色→米色，深蓝→黑色 | 立即重生成，I2I 时明确颜色 |
-| 发型 | 长发变短、刘海消失 | 重生成，在描述中再次强调发型 |
-| 标志性细节 | 眼镜/首饰消失 | 重生成，在描述中单独强调 |
-| 年龄感 | 角色变老/变年轻 | 重生成，描述中加年龄锚点词 |
-
-**AI 剧情戏特有的图像问题**，逐镜主动检查：
-
-- **眼神空洞**：近景/特写镜头AI容易生成玻璃眼，看起来没有情绪。若出现→ I2I 修改时加"眼神锐利清晰有神，焦点在眼睛"
-- **手部变形**：握手、指指点点、手持物品的镜头手部容易出 6 根手指或骨骼错误。若有手部动作的近景→ 预览时重点检查，变形则重生成并简化手部动作描述
-- **背景人物鬼畜**：场景里有模糊人群的镜头，背景人物容易出现奇怪身形。检查背景，若异常→ 修改时加"背景人物完全模糊虚化，不可辨认细节"
-- **对话镜头两人朝向相同**：正反打对话戏中两人有时面朝同一方向（像在看墙）。若出现→ 重生成时明确指定朝向（见附录对话镜头公式）
-- **多格构图**：一个镜头描述应对应单一时间点的完整电影构图，不包含任何分割线或多视角并列。AI 有时会将包含动作序列的镜头描述（「首先…然后…」）误解为分镜板，输出多格拼图。镜头描述应使用当下时态描述单一画面状态，而非叙事序列；若生成结果出现分格，重新描述时删除序列词，改为静态构图语言
-
-**修正方式**：
-```
-发消息：「请参考镜头N中[角色名]的形象，重新生成镜头M，[具体修正点]，其他不变」
-```
-**最多只重试 1 次**——若重生成后仍有偏差，接受现状继续，不要反复循环。
-
-### ③ 同场景连续镜头的景深一致性检查
-
-对**同场景内连续镜头**（不含景别切换），额外检查：
-- 背景虚化程度是否一致（同一场景不应一张浅景深、下一张背景清晰）
-- 不同场景之间无需做此对比
+**`filter_shots`**:
+- Is the framing parsed correctly (wide / medium / close-up / extreme close-up corresponding to the script description)
+- Duration of dialogue shots: must be ≥ the natural reading time of the line + 0.5s buffer; check for shots that are too short
+- Reaction shots (no dialogue): recommend 2–3 seconds; too short and the emotion cannot land
 
 ---
 
-## Step 5：清除所有尾帧
+## Step 4: Check and Supplement Images, Verify Appearance Consistency Grouped by Character
 
-**策略：只保留首帧，清除全部尾帧。**
+**Check first, then generate as needed** — the editor automatically generates start frame images when the ICT is created; do not blindly regenerate everything.
 
-尾帧会导致视频边界出现异常的画面融合效果，统一不使用。Step 2 发送剧本时已在 prompt 中声明不要尾帧，但 S0 Pipeline 有时仍会自动生成尾帧，需在此步骤手动清除。
+### ① Check which frames already have images
 
-### 检查是否存在尾帧
+Check shots
 
-从 `filter_shots` 或上一步的 `get_state` 结果中，检查是否有 `type: "尾帧"` 且 `img: true` 的帧。若存在，执行清除。
+- If there are frames with `img: false` → select only the missing frames and regenerate via `sidebar.btn_generate`
+- Once all start frames have `img: true`, proceed to consistency check
 
-### 清除操作
+### ② Check appearance consistency grouped by character
 
-发消息批量清除：
+List all shots in which each character appears from the project state or character filter, and preview them group by group:
 
+Preview frames one by one
+
+**Compare all shots of the same character side by side**, focusing on:
+
+| Check Item | Common Deviation | Action |
+|------------|------------------|--------|
+| Clothing color | White → off-white, dark blue → black | Regenerate immediately; specify color clearly during I2I |
+| Hairstyle | Long hair becomes short, bangs disappear | Regenerate; re-emphasize hairstyle in description |
+| Signature detail | Glasses / jewelry disappears | Regenerate; explicitly emphasize in description |
+| Age feel | Character looks older / younger | Regenerate; add age anchor word in description |
+
+**AI-specific image issues in dramatic content** — proactively check per shot:
+
+- **Glassy eyes**: AI tends to generate glass-eyed characters in close-up / extreme close-up shots that appear emotionless. If this occurs → add "eyes sharp and clear, focused on the eyes" during I2I correction
+- **Distorted hands**: hands in gripping, pointing, or holding shots are prone to 6-finger or skeletal errors. For close-up shots with hand movement → check carefully during preview; if distorted, regenerate and simplify the hand movement description
+- **Ghostly background figures**: in scenes with blurred crowds, background figures can appear with strange bodies. Check backgrounds; if abnormal → add "background figures completely blurred, no discernible details" when correcting
+- **Both characters facing the same direction in dialogue shots**: in shot-reverse-shot dialogue scenes, both characters sometimes face the same direction (as if looking at a wall). If this occurs → specify facing direction explicitly during regeneration (see appendix for dialogue shot formula)
+- **Multi-panel composition**: a shot description should correspond to a single point-in-time complete cinematic composition with no dividing lines or multi-angle juxtaposition. AI sometimes misinterprets shot descriptions containing action sequences ("first... then...") as storyboards and outputs multi-panel composites. Shot descriptions should use present-tense language describing a single static state, not a narrative sequence; if the output has panels, remove sequence words from the description and rewrite using static composition language
+
+**Correction method**:
 ```
-发消息：「请清除所有镜头的尾帧（tail_frame），只保留首帧」
+Send message: "Please reference the character [character name] in Shot N, regenerate Shot M, [specific correction], everything else unchanged"
 ```
+**Retry at most 1 time** — if there is still deviation after regeneration, accept and move on; do not loop repeatedly.
 
-等待响应后，再次 `get_state` 或 `filter_shots` 确认所有 `type: "尾帧"` 的帧均已消失。
+### ③ Check depth-of-field consistency for consecutive shots in the same scene
 
-若消息方式不生效，改用 `sidebar.btn_generate` 面板逐一确认：不要勾选任何尾帧相关项，只保留首帧。
+For **consecutive shots within the same scene** (excluding framing changes), additionally check:
+- Whether the degree of background blur is consistent (the same scene should not have shallow depth of field in one shot and a sharp background in the next)
+- No need for this comparison between different scenes
 
 ---
 
-## Step 6：生成音频（多角色音色）
+## Step 5: Clear All Tail Frames
 
-**音频必须先于视频生成**（音频时长决定视频时长）：
+**Strategy: keep only start frames, clear all tail frames.**
 
-生成音频
+Tail frames cause abnormal visual blending effects at video boundaries. The standard practice is not to use them. Step 2 already declares in the prompt not to use tail frames, but the S0 Pipeline sometimes auto-generates them, so they must be manually cleared in this step.
 
-### 多角色声音方向
+### Check whether tail frames exist
 
-对话戏的声音描述影响情绪感知，不要只写"男声/女声"：
+From `filter_shots` or the `get_state` result from the previous step, check whether there are frames with `type: "tail frame"` and `img: true`. If any exist, proceed with clearing.
 
-**描述公式**：`[性别+年龄感] + [声音质地] + [情绪基调] + [语速]`
+### Clearing operation
 
-| 角色类型 | 描述示例 |
-|---------|---------|
-| 年轻女主（情绪压抑） | 年轻女声，声线清亮，带压抑的克制感，语速偏慢，停顿感强 |
-| 中年男性（疲惫愧疚） | 成熟男声，声线低沉略带沙哑，疲态，语速慢，尾音收弱 |
-| 年轻人（轻松日常） | 年轻男声，声线明朗，语气随意自然，语速适中 |
-| 反派/强势角色 | 成熟男声，声线厚重有力，语速偏快，语气坚定无停顿 |
+Send a message for batch clearing:
 
-**语速选择原则**（对话戏不要用 voiceover 的"语速较快"）：
-- 愤怒/激动场景 → 语速偏快，语气有力
-- 悲伤/愧疚场景 → 语速慢，停顿感强
-- 紧张压抑场景 → 语速慢，刻意的停顿和沉默
-- 轻松日常场景 → 语速适中，自然随意
-
-### 音色克隆（可选）
-
-上传 5-10 秒参考音频，将返回的 `$asset_id` 写入角色的 `.voice` 字段：
 ```
-发消息：「请把角色[角色名]的音色设置为 $<audio_asset_id>」
+Send message: "Please clear the tail frame (tail_frame) of all shots, keeping only the start frame"
 ```
 
-等待所有音频生成完成。
+After receiving the response, use `get_state` or `filter_shots` again to confirm all frames with `type: "tail frame"` have been removed.
+
+If the message approach does not work, switch to manually confirming via the `sidebar.btn_generate` panel: do not check any tail frame items; keep only start frames.
 
 ---
 
-## Step 7：生成所有视频
+## Step 6: Generate Audio (Multi-Character Voices)
 
-音频完成后，生成所有视频，等待完成。
+**Audio must be generated before video** (audio duration determines video duration):
 
----
+Generate audio
 
-## Step 8：预览验证
+### Multi-character voice direction
 
-逐个预览，重点检查**场景切换处**和**同场景衔接处**：
+Voice descriptions for dialogue scenes affect emotional perception; do not just write "male voice / female voice":
 
-**检查点**：
-- **场景切换处**：切换是否干净自然
-- **多角色对话**：台词归属是否正确，口型/角色是否对应
-- **景别变化**：全景/中景/特写是否符合剧本意图
-- **确认无尾帧残留**：若仍有尾帧导致画面异常，回到 Step 5 重新清除后只重生成该镜头视频
+**Description formula**: `[gender + approximate age] + [voice texture] + [emotional baseline] + [pace]`
 
----
+| Character Type | Description Example |
+|----------------|---------------------|
+| Young female lead (emotionally suppressed) | Young female voice, bright vocal tone, with a restrained sense of suppression, slower pace, strong sense of pauses |
+| Middle-aged male (tired and guilty) | Mature male voice, low-pitched slightly hoarse, weary quality, slow pace, trailing ends |
+| Young person (relaxed and everyday) | Young male voice, bright vocal tone, casual and natural delivery, moderate pace |
+| Antagonist / dominant character | Mature male voice, deep and powerful, faster pace, firm delivery with no pauses |
 
-## Step 9：导出
+**Pace selection principles** (do not use voiceover-style "fast pace" for dialogue scenes):
+- Angry / excited scene → faster pace, forceful delivery
+- Sad / guilty scene → slow pace, strong sense of pauses
+- Tense and oppressive scene → slow pace, deliberate pauses and silences
+- Relaxed everyday scene → moderate pace, natural and casual
 
-所有镜头验证通过后导出。
+### Voice cloning (optional)
 
----
-
-## 关键经验
-
-- **不要重写用户剧本**：S0 会自动解析 script/shotlist，Claude 只需补全视觉描述后原文发送
-- **Step 1 补全结果展示给用户后直接继续 Step 2**，不等待确认；用户若有修改可发消息告知
-- **`filter_characters` 是多角色剧本最重要的检查**：identity_anchor 在所有镜头必须一致，发现不一致立即用 `edit` 统一
-- **台词归属必须核查**：多角色对话戏中台词串角色是严重问题，`filter_dialogs` 逐条确认
-- **不使用尾帧**：Step 2 prompt 中已声明不要尾帧，Step 5 负责清除 S0 自动生成的残余尾帧；尾帧会导致视频边界异常融合
-- **按角色分组检查图片**，而不是按顺序逐张——同一角色所有镜头放一起对比，偏差更容易发现
-- **近景/特写必须检查眼神**：AI 近景人物容易眼神空洞，发现后立即 I2I 修正
-- **对话镜头检查朝向轴线**：正反打时说话方/听话方朝向不能混乱，发现后重生成并明确指定朝向
-- **多角色音色描述要有情绪方向**，不要只写"男声/女声"——声线质地和情绪基调才是关键
-- **undo/redo**：`workspace.btn_undo` / `workspace.btn_redo` 可回退误操作
-- BGM 描述在 `global.bgm` 字段，别忘了设置
-
----
-
-## 附录：镜头描述参考
-
-### 各景别的有效写法
-
-S0 解析脚本时依赖镜头描述推断景别和构图，描述越准确，生成图片越符合意图。
-
-**描述公式**：`[景别] + [主体位置/朝向] + [动作/表情/情绪] + [关键视觉元素] + [光线] + [景深]`
-
----
-
-**全景 / 建立镜头（Wide / Establishing Shot）**
-- 作用：建立空间感、开场定位、表达孤立感
-- 写法重点：环境主导，人物较小；先描述环境，后说人物位置
+Upload a 5–10 second reference audio clip; write the returned `$asset_id` into the character's `.voice` field:
 ```
-示例：
-宽阔咖啡馆内景，午后暖阳斜射，木质桌椅，林晓一人坐在靠窗位置左侧，
-身形较小，背景是模糊的其他顾客和店内陈设，整体画面空旷安静
+Send message: "Please set the voice for character [character name] to $<audio_asset_id>"
 ```
 
+Wait for all audio to finish generating.
+
 ---
 
-**中景（Medium Shot）**
-- 作用：对话戏主力景别，同时展示表情和肢体语言
-- 写法重点：人物腰部以上，明确朝向（对话时两人要相向而立）
-```
-单人中景示例：
-中景，陈明腰部以上，面向画面左侧，眉头微皱嘴角紧抿（压抑情绪），
-灰蓝色西装，背景是模糊的咖啡馆环境，浅景深
+## Step 7: Generate All Videos
 
-对话双人中景示例（两人同框）：
-中景，林晓坐在画面左侧面朝右看向陈明，陈明坐在画面右侧面朝左看向林晓，
-两人之间有桌面，表情各有心事，午后侧光，背景浅景深虚化
+Once audio is complete, generate all videos and wait for completion.
+
+---
+
+## Step 8: Preview Verification
+
+Preview each shot, focusing on **scene transition points** and **continuity within the same scene**:
+
+**Check points**:
+- **Scene transitions**: are the cuts clean and natural
+- **Multi-character dialogue**: is dialogue attribution correct; do lip sync and characters match
+- **Framing changes**: do wide / medium / close-up framings match the script's intent
+- **Confirm no remaining tail frames**: if tail frames are still causing visual anomalies, return to Step 5, clear them again, then only regenerate the affected shot's video
+
+---
+
+## Step 9: Export
+
+Export once all shots have been verified.
+
+---
+
+## Key Learnings
+
+- **Do not rewrite the user's script**: S0 automatically parses script/shotlist; Claude only needs to supplement visual descriptions and send the original text
+- **Show the Step 1 supplementation results to the user, then proceed directly to Step 2** without waiting for confirmation; if the user has changes they can send a message
+- **`filter_characters` is the most important check for multi-character scripts**: identity_anchor must be identical across all shots; if inconsistencies are found, immediately use `edit` to unify them
+- **Dialogue attribution must be verified**: mixed-up dialogue in multi-character scenes is a serious problem; confirm each line with `filter_dialogs`
+- **Do not use tail frames**: Step 2 prompt already declares no tail frames; Step 5 is responsible for clearing any residual tail frames auto-generated by S0; tail frames cause abnormal blending at video boundaries
+- **Check images grouped by character**, not in sequential order — putting all shots of the same character together for comparison makes deviations much easier to spot
+- **Close-up / extreme close-up shots must have their eyes checked**: AI close-up characters are prone to glassy eyes; fix with I2I immediately when found
+- **Check the axis line in dialogue shots**: in shot-reverse-shot sequences, the speaker's and listener's facing directions must not be confused; if found, regenerate and explicitly specify the facing direction
+- **Multi-character voice descriptions must have an emotional direction** — do not just write "male / female voice"; vocal texture and emotional baseline are the key
+- **undo/redo**: `workspace.btn_undo` / `workspace.btn_redo` can revert accidental operations
+- BGM description goes in the `global.bgm` field; don't forget to set it
+
+---
+
+## Appendix: Shot Description Reference
+
+### Effective writing for each framing type
+
+S0 parses scripts by inferring framing and composition from shot descriptions; the more precise the description, the more the generated image matches the intent.
+
+**Description formula**: `[framing] + [subject position / facing direction] + [action / expression / emotion] + [key visual elements] + [lighting] + [depth of field]`
+
+---
+
+**Wide / Establishing Shot**
+- Purpose: establishes spatial feel, opening orientation, expresses isolation
+- Writing focus: environment dominates, person is small; describe environment first, then person's position
+```
+Example:
+Wide interior of a café, afternoon warm sunlight streaming in at an angle, wooden tables and chairs, Lin Xiao sitting alone
+at a window seat on the left, figure relatively small, background is blurred other patrons and interior furnishings, overall frame spacious and quiet
 ```
 
 ---
 
-**过肩镜头（Over-the-Shoulder Shot）**
-- 作用：建立两人对话关系，带观众站在一方视角
-- 写法重点：明确谁在前景（背对镜头）谁在中景（面对镜头）
+**Medium Shot**
+- Purpose: primary framing for dialogue scenes, shows both expression and body language simultaneously
+- Writing focus: character from waist up, specify facing direction (in dialogue, two people face each other)
 ```
-示例：
-过肩镜头，陈明的右肩和后脑在画面左侧前景（虚化），林晓在中景右侧，
-正面面向镜头，表情认真带一丝犹豫，背景咖啡馆环境虚化
-```
+Single-person medium shot example:
+Medium shot, Chen Ming from waist up, facing left of frame, brow slightly furrowed and lips pressed tight (suppressed emotion),
+gray-blue blazer, background is a softly blurred café environment, shallow depth of field
 
----
-
-**近景 / 特写（Close-up）**
-- 作用：情绪高潮、关键台词落地、展示内心状态
-- 写法重点：肩部以上或纯脸部；**必须**加"眼神锐利有神"，否则AI容易生成玻璃眼
-```
-情绪特写示例：
-近景，林晓脸部特写，眼眶微红，眼神复杂犹豫，泪光隐约，
-嘴唇轻抿，眼神锐利清晰有神（焦点在眼睛），背景完全虚化，
-午后暖光侧射，轮廓光勾勒发丝
-
-物件特写示例：
-特写，桌上一杯咖啡，杯沿有轻微水雾，旁边是林晓的手（
-自然放置，不是焦点），背景虚化，暖色光线，构图偏左
+Two-person medium shot example (both in frame):
+Medium shot, Lin Xiao sitting on the left side of the frame facing right looking at Chen Ming, Chen Ming sitting on the right side of the frame facing left looking at Lin Xiao,
+a tabletop between them, each with a preoccupied expression, afternoon side light, background shallow depth of field blur
 ```
 
 ---
 
-**正反打对话（Shot-Reverse-Shot）**
-
-正反打是对话戏的标准结构，但 AI 最容易出现两人面朝同一方向的错误。
-**轴线规则**：确定好两人的空间位置后（如 A 在左、B 在右），所有正反打镜头中 A 始终面朝右、B 始终面朝左，不可随意交换。
-
+**Over-the-Shoulder Shot**
+- Purpose: establishes the relationship between two people in conversation, places the viewer in one character's perspective
+- Writing focus: specify clearly who is in the foreground (back to camera) and who is in the mid-ground (facing the camera)
 ```
-镜头A（林晓说话）：
-中景，林晓位于画面左侧，面朝右侧看向陈明，眉头微皱，[表情]，
-陈明的背影/侧影虚化在画面右侧边缘
-
-镜头B（陈明反应）：
-中景，陈明位于画面右侧，面朝左侧看向林晓，嘴角轻抿，[表情]，
-林晓的背影/侧影虚化在画面左侧边缘
+Example:
+Over-the-shoulder shot, Chen Ming's right shoulder and back of head in the left foreground (blurred), Lin Xiao in the mid-ground on the right,
+facing the camera directly, expression attentive with a hint of hesitation, café environment blurred in background
 ```
 
 ---
 
-### AI 生成剧情戏的常见陷阱
+**Close-up / Extreme Close-up**
+- Purpose: emotional peak, key dialogue landing, revealing inner state
+- Writing focus: shoulders-up or face only; **must** add "eyes sharp and clear," otherwise AI tends to generate glassy eyes
+```
+Emotional close-up example:
+Close-up, Lin Xiao's face, eyes slightly reddened, gaze complex and hesitant, faint glimmer of tears,
+lips lightly pressed, eyes sharp and clear (focus on the eyes), background fully blurred,
+afternoon warm light from the side, rim light outlining hair
 
-| 问题 | 触发场景 | 预防/修正 |
-|------|---------|---------|
-| 眼神空洞无神 | 近景、特写镜头 | 描述中加"眼神锐利清晰有神，焦点在眼睛" |
-| 手部变形（6根手指） | 手部在画面中较清晰时 | 避免手部特写；若必须，描述要极具体（"右手五指自然环绕杯身"） |
-| 两人同向而立 | 对话双人镜头 | 明确指定两人朝向（"A面朝右，B面朝左"） |
-| 背景人物鬼畜变形 | 场景里有模糊人群 | 加"背景人物完全模糊，不可辨认细节" |
-| 服装颜色跑偏 | 每次生成都可能发生 | 描述用参照物辅助；filter_characters 检查时重点看颜色 |
-| 光线风格跨镜头不一致 | 同场景多镜头 | 每个镜头描述中重复光源关键词（如"左侧午后斜射自然光"） |
-| 角色年龄感飘移 | 同角色在不同镜头 | 描述中加年龄锚点词（"25岁左右"），而不仅靠外形 |
+Object close-up example:
+Close-up, a cup of coffee on a table, slight condensation on the rim, Lin Xiao's hand beside it (
+resting naturally, not the focus), background blurred, warm lighting, composition leaning left
+```
 
 ---
 
-## 支持的剧本格式
+**Shot-Reverse-Shot**
 
-S0 Pipeline 可自动识别和转换以下格式，无需 Claude 手动处理：
-- **中文多角色对话剧本**（「角色：台词」格式）
-- **英文分镜脚本**（含时间码、景别标注：INT./EXT.、CLOSE-UP 等）
-- **越南文/俄文等叙事文字稿**（自动作为 novel 类型处理，S0 自动转换为 shotlist）
+Shot-reverse-shot is the standard structure for dialogue scenes, but AI most commonly makes the error of both characters facing the same direction.
+**Axis rule**: once the two characters' spatial positions are established (e.g., A on the left, B on the right), in all shot-reverse-shot cuts A always faces right and B always faces left — this cannot be swapped arbitrarily.
 
+```
+Shot A (Lin Xiao speaking):
+Medium shot, Lin Xiao on the left side of the frame, facing right looking at Chen Ming, brow slightly furrowed, [expression],
+Chen Ming's back / profile softly blurred at the right edge of the frame
+
+Shot B (Chen Ming reacting):
+Medium shot, Chen Ming on the right side of the frame, facing left looking at Lin Xiao, corner of mouth lightly pressed, [expression],
+Lin Xiao's back / profile softly blurred at the left edge of the frame
+```
+
+---
+
+### Common AI pitfalls in generating dramatic content
+
+| Problem | Trigger Scenario | Prevention / Fix |
+|---------|-----------------|-----------------|
+| Glassy, expressionless eyes | Close-up, extreme close-up shots | Add "eyes sharp and clear, focus on the eyes" to description |
+| Distorted hands (6 fingers) | When hands are relatively clear in frame | Avoid hand close-ups; if necessary, be extremely specific ("right hand five fingers naturally wrapped around the cup") |
+| Both characters facing the same direction | Two-person dialogue shot | Explicitly specify both characters' facing directions ("A faces right, B faces left") |
+| Ghostly / distorted background figures | Scenes with blurred crowds | Add "background figures completely blurred, no discernible details" |
+| Clothing color drift | Can happen every generation | Assist descriptions with reference objects; focus on color during filter_characters check |
+| Inconsistent lighting style across shots | Multiple shots in the same scene | Repeat key lighting keywords in each shot description (e.g., "afternoon diagonal natural light from the left") |
+| Character age feel drifting | Same character across different shots | Add age anchor word to description ("approximately 25 years old") rather than relying on appearance alone |
+
+---
+
+## Supported Script Formats
+
+The S0 Pipeline can automatically recognize and convert the following formats; Claude does not need to handle them manually:
+- **Chinese multi-character dialogue script** ("Character: line" format)
+- **English shot list / screenplay** (with timecodes, framing annotations: INT./EXT., CLOSE-UP, etc.)
+- **Vietnamese / Russian and other narrative text drafts** (automatically processed as novel type; S0 auto-converts to shotlist)
