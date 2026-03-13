@@ -1,335 +1,335 @@
-# 照片 Vlog — AI Bridge 工作流
+# Photo Vlog — AI Bridge Workflow
 
-将用户上传的 3-10 张真实照片，串联成 30-60 秒有叙事感的 Vlog 短视频。
-若无照片，则自主设计人物形象与场景，进入无照片模式。
-参考感知：旅行 Vlog、日常生活记录、聚会回顾、美食探店。
+Turn 3-10 real photos uploaded by the user into a 30-60 second narrative Vlog short video.
+If no photos are provided, autonomously design character appearance and scenes, entering no-photo mode.
+Reference perception: travel Vlog, daily life records, party recaps, food exploration.
 
-## 流程概览
+## Workflow Overview
 
 ```
-Step 0：获取连接信息
-Step 1：分析照片集 → 设计 Vlog 方案（自检后展示，直接继续）
-Step 2：并行上传照片 → 新建项目 → 一次性发送脚本
-Step 3：Filter 检查
-Step 4：清除所有尾帧（Vlog 硬切风格）
-Step 5：生成音频（BGM 为主）
-Step 6：生成视频（仅 video，照片直接作首帧，不重新生成）
+Step 0: Obtain connection information
+Step 1: Analyze photo set → design Vlog plan (self-review, then present, continue directly)
+Step 2: Upload photos in parallel → create project → send complete script at once
+Step 3: Filter check
+Step 4: Clear all tail frames (Vlog hard-cut style)
+Step 5: Generate audio (BGM as primary)
+Step 6: Generate video (video only; photos serve directly as start frames, no regeneration)
 ```
 
 ---
 
-## Step 0：获取连接信息
+## Step 0: Obtain Connection Information
 
-调用 `get_state` 获取登录状态，未登录时展示 `login_url` 给用户，授权后进入项目列表。
+Call `get_state` to get login status. If not logged in, show the `login_url` to the user; after authorization, enter the project list.
 
 ---
 
-## Step 0.5（无照片时）：自主设计人物形象 + 场景
+## Step 0.5 (when no photos): Autonomously Design Character Appearance + Scenes
 
-**触发条件**：用户未提供任何照片时执行，有照片则直接跳到 Step 1。
+**Trigger condition**: Execute when the user has not provided any photos; if photos are provided, skip directly to Step 1.
 
-> Claude 不生成图片，此步骤产出文字描述，由视频编辑器 AI 负责生成实际图片。
+> Claude does not generate images; this step produces text descriptions, and the video editor AI is responsible for generating the actual images.
 
-### ① 人物形象设计
+### ① Character Appearance Design
 
-根据用户线索（或完全自由发挥），设计一个有记忆点的角色：
+Based on user cues (or entirely at your own discretion), design a memorable character:
 
-| 要素 | 示例 |
+| Element | Example |
 |------|------|
-| 性别/年龄感 | 20多岁女生 |
-| 外貌特征 | 短卷发、温柔笑容、自然妆 |
-| 穿搭风格 | 白色宽松连帽衫 + 牛仔裤 + 帆布鞋 |
-| 主题/场景 | 周末城市漫步：咖啡馆、小巷、公园、书店 |
+| Gender/age feel | Female in her 20s |
+| Appearance features | Short curly hair, warm smile, natural makeup |
+| Outfit style | White oversized hoodie + jeans + canvas shoes |
+| Theme/scene | Weekend city stroll: café, alley, park, bookstore |
 
-写一段**统一的人物外貌描述**（后续所有镜头复用）：
+Write a **unified character appearance description** (reused across all subsequent shots):
 
 ```
-人物基础描述：
-一位 20 多岁的亚洲女生，短卷发，自然妆，白色宽松连帽衫配牛仔裤，
-神情温柔自然，画面风格明亮日系胶片感
+Character base description:
+An Asian female in her early-to-mid 20s, short curly hair, natural makeup, white oversized hoodie with jeans,
+expression warm and natural, image style bright Japanese film grain feel
 ```
 
-### ② 场景列表设计（6-8 个场景）
+### ② Scene List Design (6-8 scenes)
 
-| # | 段落 | 场景描述（直接用于脚本） |
+| # | Segment | Scene Description (used directly in script) |
 |---|------|----------------------|
-| 1 | 开场定调 | 咖啡馆落地窗前，女生捧着拿铁侧身望向窗外，暖光，近景 |
-| 2-5 | 过程高光 | [各场景描述] |
-| 6 | 情感定格 | 傍晚街头，女生回头微笑，黄昏逆光 |
-| 7 | 收尾 | 全景城市天际线，日落余晖 |
+| 1 | Opening tone-setter | In front of floor-to-ceiling café window, girl holding a latte, turning sideways to look out, warm light, medium close-up |
+| 2-5 | Process highlights | [descriptions for each scene] |
+| 6 | Emotional freeze frame | Evening street, girl turns back and smiles, golden-hour backlight |
+| 7 | Closing | Wide-angle city skyline, sunset afterglow |
 
-> **描述公式**：`[地点/环境] + [人物动作/状态] + [光线/氛围] + [构图/景别]`
-> 每条描述 20-40 字，细节越具体生成效果越好。
+> **Description formula**: `[location/environment] + [character action/state] + [lighting/atmosphere] + [composition/shot size]`
+> Each description 20-40 characters; the more specific the details, the better the generation result.
 
-### ③ 展示方案，直接进入 Step 2
+### ③ Present Plan, Proceed Directly to Step 2
 
 ```
-【无照片模式 — 自动设计方案】
+[No-Photo Mode — Auto-Designed Plan]
 
-人物形象：[...]
-主题：[...]，时长约 Ns
-风格：[...]
-BGM：[...]
+Character appearance: [...]
+Theme: [...], approx. N seconds
+Style: [...]
+BGM: [...]
 
-场景列表：
-#1（3s）- 缓慢拉远：[场景描述]
-#2（4s）- 水平平移：[场景描述]
+Scene list:
+#1 (3s) - slow pull back: [scene description]
+#2 (4s) - horizontal pan: [scene description]
 ...
 ```
 
 ---
 
-## Step 1：逐张分析照片 → 单张定稿 → 叙事排序
+## Step 1: Analyze Each Photo → Finalize Each Shot → Narrative Ordering
 
-**三步走，顺序不能乱**：先读懂每张，再为每张出方案，最后按情绪弧线拼接。
+**Three steps in sequence — do not mix them up**: first understand each photo, then produce a plan for each photo, then assemble them along an emotional arc.
 
 ---
 
-### ① 逐张分析（读懂每张）
+### ① Analyze Each Photo (understand each one)
 
-逐张读取照片，为每张建立一条记录：
+Read each photo in turn and build one record per photo:
 
-| 编号 | 内容描述 | 情绪强度 | 构图类型 | 叙事角色候选 |
+| No. | Content Description | Emotional Intensity | Composition Type | Narrative Role Candidates |
 |------|---------|--------|--------|-----------|
-| P1 | 咖啡馆窗边，暖光侧脸 | ★★★★ 高 | 人物近景 | 开场 / 情感定格 |
-| P2 | 街道全景，人群模糊 | ★★☆ 中低 | 环境全景 | 过渡 / 收尾 |
+| P1 | Café by the window, warm side-light profile | ★★★★ High | Character medium close-up | Opening / Emotional freeze frame |
+| P2 | Street wide shot, blurred crowd | ★★☆ Medium-low | Environmental wide shot | Transition / Closing |
 | ... | ... | ... | ... | ... |
 
-**每张的分析要点**：
-- **主体**：人物 / 风景 / 美食 / 建筑 / 细节物品
-- **构图类型**：全景大景 / 人物特写 / 细节特写 / 群体合照
-- **光线/氛围**：暖光/冷光/逆光/平光，氛围是什么感觉
-- **情绪强度**：1-5 分，这张照片能引发多强的情感共鸣
+**Analysis points for each photo**:
+- **Subject**: Character / scenery / food / architecture / detail object
+- **Composition type**: Wide/establishing shot / character close-up / detail close-up / group photo
+- **Lighting/atmosphere**: Warm light/cool light/backlight/flat light; what is the atmospheric feel
+- **Emotional intensity**: 1-5 stars; how strong an emotional resonance this photo can evoke
 
 ---
 
-### ② 单张定稿（内容决定运镜和文案）
+### ② Finalize Each Shot (content determines camera movement and copy)
 
-基于每张的分析，逐张确定方案，**内容→运镜/文案 有因果逻辑**：
+Based on the analysis of each photo, determine the plan shot by shot, with **a causal logic between content → camera movement/copy**:
 
-| 构图类型 | 推荐运镜 | 理由 |
+| Composition Type | Recommended Camera Movement | Reason |
 |--------|--------|------|
-| 全景/大景/地标 | 缓慢拉远 或 水平平移 | 宏观感需要时间展开 |
-| 人物特写/表情 | 缓慢推进 | 向情绪焦点靠近 |
-| 群体合照 | 水平平移（左→右）| 扫视感，让观众逐一看到每个人 |
-| 美食/细节特写 | 缓慢推进（聚焦细节）| 引导视线到最诱人的部分 |
-| 情感最强的一张 | 静止定格 | 留白，让观众停在这一刻 |
-| 欢乐/活跃/派对 | 轻微手持抖动 | 增加临场感和欢乐氛围 |
+| Wide/establishing shot/landmark | Slow pull back or horizontal pan | Macro feel needs time to unfold |
+| Character close-up/expression | Slow push in | Moving toward the emotional focal point |
+| Group photo | Horizontal pan (left → right) | Scanning feel, letting the audience see each person |
+| Food/detail close-up | Slow push in (focus on detail) | Guide the eye to the most appealing part |
+| The most emotionally intense photo | Static freeze frame | Empty space, letting the audience linger in this moment |
+| Joyful/lively/party | Slight handheld shake | Adds immediacy and joyful atmosphere |
 
-**旁白判断**：**默认全片无旁白**，纯 BGM 讲故事。旁白会破坏 Vlog 的沉浸感，显得像口播视频。
-- 用户明确要求旁白时：最多 1-3 句，只在开场或收尾点题，其余镜头一律无旁白
-- 旁白写法：口语化，不超过 10 字/句，轻轻点题即可
+**Voiceover judgment**: **Default is no voiceover for the entire film**; BGM tells the story. Voiceover breaks the immersion of a Vlog and makes it feel like a talking-head video.
+- When the user explicitly requests voiceover: a maximum of 1-3 sentences, only at the opening or closing to mark the theme; all other shots have no voiceover
+- Voiceover style: conversational, no more than 10 characters per sentence, lightly touching the theme
 
-为每张照片输出：
+Output for each photo:
 ```
-P1：[内容简述]
-→ 运镜：缓慢推进（人物情绪特写，向焦点靠近）
-→ 时长：4s（情绪强，稍长留白）
-→ 旁白：「终于来了，京都三天两夜」（开场点题）
+P1: [brief content description]
+→ Camera movement: slow push in (character emotion close-up, moving toward focal point)
+→ Duration: 4s (high emotion, slightly longer for breathing room)
+→ Voiceover: "Finally here, three days in Kyoto" (opening theme-setter)
 
-P2：[内容简述]
-→ 运镜：水平向右平移（全景街道，展开空间感）
-→ 时长：3s
-→ 旁白：无
+P2: [brief content description]
+→ Camera movement: horizontal pan right (wide street, opening up the sense of space)
+→ Duration: 3s
+→ Voiceover: none
 ```
 
 ---
 
-### ③ 叙事排序（把已定稿的单张按情绪弧线拼接）
+### ③ Narrative Ordering (assemble finalized shots along an emotional arc)
 
-把已有运镜+旁白的单张，按以下结构重排，**不一定是拍摄时间顺序**：
+Take the shots with finalized camera movement + voiceover and reorder them according to the following structure — **not necessarily in the order they were taken**:
 
-| 段落 | 张数 | 选片原则 |
+| Segment | Number of Shots | Selection Principle |
 |------|------|--------|
-| 开场定调 | 1-2 | 情绪强度最高或最能交代地点/氛围的 |
-| 过程高光 | 3-6 | 中等情绪强度，节奏有起伏，运镜要交替 |
-| 情感定格 | 1-2 | 情绪强度最高，静止定格，稍长留白 |
-| 收尾 | 1 | 全景/合照/最具代表性，干净利落 |
+| Opening tone-setter | 1-2 | Highest emotional intensity, or best at conveying location/atmosphere |
+| Process highlights | 3-6 | Medium emotional intensity, rhythm has rise and fall, camera movements should alternate |
+| Emotional freeze frame | 1-2 | Highest emotional intensity, static freeze frame, slightly longer breathing room |
+| Closing | 1 | Wide shot/group photo/most representative, clean and crisp |
 
-**运镜交替检查**：排完顺序后，检查相邻镜头运镜是否交替（推进→平移→拉远→推进），若有连续相同则调整顺序。
+**Camera movement alternation check**: After ordering, check whether adjacent shots alternate camera movements (push in → pan → pull back → push in). If consecutive shots have the same movement, adjust the order.
 
 ---
 
-### ④ 推断主题 + 确定 BGM
+### ④ Infer Theme + Determine BGM
 
-| 主题 | 照片信号 |
+| Theme | Photo Signals |
 |------|--------|
-| 旅行记录 | 地标、风景、交通、多场景切换 |
-| 聚会活动 | 多人合影、欢乐表情、餐桌/派对 |
-| 美食探店 | 食物特写、餐厅环境、手持食物 |
-| 日常生活 | 家居、街拍、咖啡、日常物品 |
-| 运动户外 | 装备、自然风景、运动状态 |
+| Travel record | Landmarks, scenery, transportation, multi-scene switching |
+| Party/activity | Group photos, happy expressions, dining table/party |
+| Food exploration | Food close-ups, restaurant environment, holding food |
+| Daily life | Home, street shots, coffee, everyday objects |
+| Sports/outdoors | Equipment, natural scenery, physical activity state |
 
-| Vlog 主题 | BGM 描述 |
+| Vlog Theme | BGM Description |
 |---------|---------|
-| 旅行/户外 | 轻快木吉他 + 轻打击乐，BPM 110，开阔舒朗，有呼吸感，无歌词 |
-| 聚会/生日 | 欢快钢琴 + 轻鼓点，BPM 120，温暖欢乐，活泼律动，无歌词 |
-| 日常/咖啡 | 慵懒爵士吉他，BPM 80，温馨治愈，午后咖啡馆氛围 |
-| 美食探店 | 轻快口哨 + 弦乐，BPM 100，轻松好奇，有探索感，无歌词 |
-| 运动/自然 | 清新电子 + 自然音效感，BPM 115，充满活力，开阔感 |
+| Travel/outdoors | Light acoustic guitar + light percussion, BPM 110, open and breezy, has breathing feel, no lyrics |
+| Party/birthday | Upbeat piano + light drums, BPM 120, warm and joyful, lively rhythm, no lyrics |
+| Daily life/coffee | Lazy jazz guitar, BPM 80, warm and soothing, afternoon café atmosphere |
+| Food exploration | Light cheerful whistle + strings, BPM 100, relaxed and curious, sense of discovery, no lyrics |
+| Sports/nature | Fresh electronic + natural sound feel, BPM 115, full of energy, open feel |
 
-**BGM 节奏决定时长基准**：快节奏（BPM 120+）→ 每镜 2-3s；舒缓（BPM 80-100）→ 每镜 4-5s
+**BGM tempo determines duration baseline**: Fast tempo (BPM 120+) → 2-3s per shot; relaxed (BPM 80-100) → 4-5s per shot
 
 ---
 
-### ⑤ 向用户展示方案，直接进入 Step 2
+### ⑤ Present Plan to User, Proceed Directly to Step 2
 
 ```
-【照片 Vlog 方案】
-主题：[...]，时长约 Ns
-风格：[轻快/温暖/治愈]
-BGM：[...]
-旁白：无（默认纯 BGM，用户有要求时才写）
+[Photo Vlog Plan]
+Theme: [...], approx. N seconds
+Style: [light/warm/healing]
+BGM: [...]
+Voiceover: none (default pure BGM; only added if user requests)
 
-镜头顺序（已按情绪弧线排列）：
-#1（4s）- [内容描述] - 运镜：缓慢拉远
-旁白：「[开场文案]」
+Shot order (arranged along emotional arc):
+#1 (4s) - [content description] - camera: slow pull back
+Voiceover: "[opening copy]"
 
-#2（3s）- [内容描述] - 运镜：水平向右平移
-旁白：无
+#2 (3s) - [content description] - camera: horizontal pan right
+Voiceover: none
 
 ...
 
-#N（4s）- [内容描述] - 运镜：静止定格
-旁白：「[收尾文案]」
+#N (4s) - [content description] - camera: static freeze frame
+Voiceover: "[closing copy]"
 
-（正在上传照片……）
+(Uploading photos now...)
 ```
 
 ---
 
-## Step 2：并行上传照片 → 新建项目 → 发送脚本
+## Step 2: Upload Photos in Parallel → Create Project → Send Script
 
-### ① 并行上传所有照片
+### ① Upload All Photos in Parallel
 
-**所有照片同时上传，不串行等待**，等全部完成后记录 asset_id：
+**Upload all photos simultaneously, do not wait in sequence**; record asset_id after all are complete:
 
 ```
-并行上传：
+Parallel upload:
 photo1.jpg → asset_id_1
 photo2.jpg → asset_id_2
 photo3.jpg → asset_id_3
-...（所有照片同时发起上传）
+...(all photos initiated at the same time)
 ```
 
-### ② 新建项目
+### ② Create Project
 
-新建项目，设置：名称、语言 zh-CN。
+Create a new project; set: name, language zh-CN.
 
-### ③ 发送脚本（一次性包含全部镜头）
+### ③ Send Script (all shots in one single message)
 
-**【有照片】**
+**[With photos]**
 
 ```
-请根据以下脚本创建 Vlog 视频项目，语言中文。
+Please create a Vlog video project based on the following script, in Chinese.
 
-风格：[轻快/温暖/日常记录]，手持感，照片流动感
-BGM：[具体描述，如「温暖轻快的木吉他配乐，BPM 100，无歌词」]
-旁白：无旁白，纯 BGM 讲故事（用户有特别要求时才写）
+Style: [light/warm/daily record], handheld feel, photo flow feel
+BGM: [specific description, e.g., "warm and light acoustic guitar music, BPM 100, no lyrics"]
+Voiceover: no voiceover; BGM tells the story (add only if user has specific request)
 
-每个镜头只需首帧，不要设置尾帧（tail_frame）。
+Each shot only needs a start frame; do not set a tail frame (tail_frame).
 
---- 以下为分镜脚本 ---
+--- Storyboard script below ---
 
-【镜头1】3s | 开场定调
-画面描述：参考原图 $asset_id_1，保留原图的构图、色调、主体内容，以此照片为基础生成首帧。[补充画面描述]
-运镜：缓慢拉远，从中心向外缓慢推
+[Shot 1] 3s | Opening tone-setter
+Visual description: Reference original image $asset_id_1, retain the composition, color tone, and subject of the original image, use this photo as the basis for generating the start frame. [supplementary visual description]
+Camera movement: slow pull back, slowly push outward from center
 
-【镜头2】4s | 过程记录
-画面描述：参考原图 $asset_id_2，保留原图的构图、色调、主体内容，以此照片为基础生成首帧。[补充画面描述]
-运镜：水平向右缓慢平移
+[Shot 2] 4s | Process record
+Visual description: Reference original image $asset_id_2, retain the composition, color tone, and subject of the original image, use this photo as the basis for generating the start frame. [supplementary visual description]
+Camera movement: horizontal pan slowly to the right
 
 ...
 
-【镜头N】4s | 收尾
-画面描述：参考原图 $asset_id_N，保留原图的构图、色调、主体内容，以此照片为基础生成首帧。[补充画面描述]
-运镜：静止定格
+[Shot N] 4s | Closing
+Visual description: Reference original image $asset_id_N, retain the composition, color tone, and subject of the original image, use this photo as the basis for generating the start frame. [supplementary visual description]
+Camera movement: static freeze frame
 ```
 
-> **说明**：asset_id 写在 `画面描述` 里（即 `{frameId}.description`），是生图时直接读取的 prompt，系统会以上传的照片为 img2img 参考来生成首帧。`[补充画面描述]` 填入 Step 1 分析出的该镜头具体内容（光线、构图、主体），越细致越好，帮助系统更准确地还原原图。
+> **Note**: The asset_id goes in `Visual description` (i.e., `{frameId}.description`), which is the prompt read directly during image generation; the system will use the uploaded photo as an img2img reference to generate the start frame. `[supplementary visual description]` should be filled with the specific content for that shot analyzed in Step 1 (lighting, composition, subject) — the more detailed, the better, helping the system more accurately reproduce the original image.
 
-**【无照片】**
+**[No photos]**
 
-不上传文件，直接发脚本，用 Step 0.5 的场景描述代替 asset_id：
+Do not upload files; send the script directly, replacing asset_id with the scene descriptions from Step 0.5:
 
 ```
-（格式与有照片一致，去掉「参考原图 $asset_id」，仅保留场景文字描述）
+(Format is the same as with photos; remove "Reference original image $asset_id", keep only the scene text description)
 
-重要说明：本项目无用户上传照片，请根据画面描述生成图片，不要设置尾帧。
+Important note: This project has no user-uploaded photos; please generate images based on the visual descriptions, and do not set tail frames.
 ```
 
-发送后等待完成。
+Send and wait for completion.
 
 ---
 
-## Step 3：Filter 检查
+## Step 3: Filter Check
 
-调用 `sidebar.filter.shots` 检查镜头：
-- 每个镜头 start_frame 是否对应用户照片（img 标记）
-- 运镜描述是否交替变化，不要全是同一种
-- 有旁白的镜头时长是否足够说完台词
+Call `sidebar.filter.shots` to check shots:
+- Does each shot's start_frame correspond to a user photo (img tag)?
+- Do camera movement descriptions alternate; not all the same type?
+- Are shots with voiceover long enough for the dialogue to be spoken?
 
-调用 `sidebar.filter.dialogs` 检查台词：
-- 旁白镜头不超过 3 个，且只在开场或收尾
-- 台词口语化，轻松自然
+Call `sidebar.filter.dialogs` to check dialogue:
+- No more than 3 voiceover shots, and only at the opening or closing
+- Dialogue is conversational and naturally relaxed
 
-**发现问题立即用 `edit` 修正，不要攒到最后。**
-
----
-
-## Step 4：清除所有尾帧
-
-发一条消息：「请清除所有镜头的尾帧（tail_frame），只保留首帧」
-
-等待完成后，再次调用 `filter.shots` 验证：
-- 所有镜头只有 start_frame，无 end_frame 条目
-- **验证通过后才能进入 Step 5**
+**Fix any issues immediately using `edit`; do not accumulate them until the end.**
 
 ---
 
-## Step 5：生成音频
+## Step 4: Clear All Tail Frames
 
-点击 `workspace.btn_pipeline_dialogs`，确认所有项后点击生成，等待完成。
+Send one message: "Please clear all tail frames (tail_frame) from all shots, keeping only the start frame"
 
-**BGM 描述公式**：`[乐器质感] + [BPM/节奏] + [情绪走向] + [整体氛围]`
-
-> **默认无旁白**。Vlog 靠画面+BGM 讲故事，旁白会破坏沉浸感。仅当用户明确要求时才加，且最多 1-2 句（开场点题或收尾总结），口语化，轻轻带过。
-
----
-
-## Step 6：生成视频
-
-点击 `workspace.btn_pipeline_videos`。
-
-**【有照片】**：只选 video 项，**不勾选 frame/image 生成**（已有真实照片，不要 AI 重新生成图片覆盖）
-
-**【无照片 — Step 0.5 模式】**：同时勾选 frame/image + video 生成
-
-全选所有镜头后确认，等待完成。
+After waiting for completion, call `filter.shots` again to verify:
+- All shots have only a start_frame, no end_frame entries
+- **Only proceed to Step 5 after verification passes**
 
 ---
 
-## 关键经验
+## Step 5: Generate Audio
 
-- **照片排序是灵魂**：开场选视觉冲击力最强的，不一定是时间第一张；情感定格留给最有温度的
-- **运镜要交替**：推进→平移→拉远→推进，不要连续相同，否则无节奏感
-- **BGM 节奏决定镜头时长**：先定 BGM，再根据节奏决定每镜时长
-- **asset_id 必须写入画面描述**：`参考原图 $asset_id` 放在 `{frameId}.description`（即脚本的「画面描述」字段），这是生图时直接读取的 prompt，系统才能以上传照片为 img2img 参考；写在其他地方（如元数据、全局说明）不保证被生图阶段读取
-- **默认无旁白**：除非用户明确要求，否则纯 BGM 讲故事；旁白会让 Vlog 变成口播视频
-- **不要尾帧**：Vlog 硬切更自然，Step 4 必须清除后才进 Step 5
-- **生成视频只选 video**：图片生成完成后，只生成 video，不要重新生成 frame
-- **并行上传**：所有照片同时上传，不串行等待
-- **时长控制**：3-10 张照片 → 30-60 秒成品，每镜平均 4s
+Click `workspace.btn_pipeline_dialogs`, confirm all items, click generate, and wait for completion.
+
+**BGM description formula**: `[instrument texture] + [BPM/rhythm] + [emotional arc] + [overall atmosphere]`
+
+> **Default no voiceover**. The Vlog tells its story through visuals + BGM; voiceover breaks the immersion. Add it only when the user explicitly requests it, and at most 1-2 sentences (opening theme-setter or closing summary), conversational, lightly touched on.
 
 ---
 
-## 附录
+## Step 6: Generate Video
 
-### 叙事结构速查
+Click `workspace.btn_pipeline_videos`.
 
-| Vlog 类型 | 推荐叙事结构 |
+**[With photos]**: Select only the video items, **do not check frame/image generation** (real photos already exist; do not let AI regenerate and overwrite the images)
+
+**[No photos — Step 0.5 mode]**: Check both frame/image + video generation
+
+Select all shots and confirm; wait for completion.
+
+---
+
+## Key Learnings
+
+- **Photo ordering is the soul**: Open with the most visually striking photo, not necessarily the first taken chronologically; save the warmest photo for the emotional freeze frame
+- **Camera movements must alternate**: Push in → pan → pull back → push in; do not use the same movement consecutively, or there will be no sense of rhythm
+- **BGM tempo determines shot duration**: Decide the BGM first, then determine each shot's duration based on the tempo
+- **asset_id must be written into the visual description**: Put `Reference original image $asset_id` in `{frameId}.description` (i.e., the "visual description" field in the script); this is the prompt read directly during image generation, and only then will the system use the uploaded photo as an img2img reference. Writing it anywhere else (e.g., metadata, global notes) does not guarantee it will be read during the image generation stage
+- **Default no voiceover**: Unless the user explicitly requests it, BGM tells the story; voiceover turns the Vlog into a talking-head video
+- **No tail frames**: Hard cuts are more natural for Vlogs; Step 4 must be cleared before proceeding to Step 5
+- **Only select video for video generation**: After images are complete, only generate video; do not regenerate frames
+- **Upload in parallel**: Upload all photos simultaneously; do not wait in sequence
+- **Duration control**: 3-10 photos → 30-60 second finished product, average 4s per shot
+
+---
+
+## Appendix
+
+### Narrative Structure Quick Reference
+
+| Vlog Type | Recommended Narrative Structure |
 |---------|-----------|
-| 旅行 | 出发/交通 → 地标打卡 → 美食/体验 → 夜景/全景收尾 |
-| 聚会生日 | 场地/布置 → 人物欢聚 → 高潮互动 → 合照收尾 |
-| 美食探店 | 店外/招牌 → 菜品特写 → 品尝享用 → 最满意菜收尾 |
-| 日常记录 | 晨间/起床 → 日常活动 → 小确幸瞬间 → 傍晚/结尾 |
+| Travel | Departure/transportation → landmark check-ins → food/experiences → night view/wide-shot closing |
+| Party/birthday | Venue/decorations → group gathering → peak interaction → group photo closing |
+| Food exploration | Exterior/sign → dish close-ups → tasting/enjoying → favorite dish as closing |
+| Daily record | Morning/waking up → daily activities → small happy moments → evening/ending |

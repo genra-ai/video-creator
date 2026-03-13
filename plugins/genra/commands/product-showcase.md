@@ -1,357 +1,356 @@
 # Product Showcase
 
-将用户的产品图和卖点转化为电商商品主页展示视频。
-核心是功能展示、卖点可视化和使用场景演示，而非品牌氛围。
-参考感知：Apple 产品页视频、淘宝/京东商品主图视频、Shopify 商品展示页。
+Converts the user's product images and selling points into an e-commerce product homepage showcase video.
+The core focus is feature demonstration, selling-point visualization, and usage scenario illustration — not brand atmosphere.
+Reference perception: Apple product page videos, Taobao/JD product main-image videos, Shopify product showcase pages.
 
-## 流程概览
+## Workflow Overview
 
-Step 1：竞品参考检索（WebSearch）+ 分析产品 + 输出分镜方案（自检后展示给用户，直接继续）
-Step 2：上传产品图，创建项目，发送脚本
-Step 3：Filter 检查
-Step 4：清除所有尾帧
-Step 5：生成音频（旁白为核心，BGM 辅助）
-Step 6：生成所有视频
-
----
-
-## Step 1：分析产品 + 输出分镜方案
-
-**核心任务**：不是建立视觉世界，而是**把产品的每一个核心卖点用画面讲清楚**。
-
-### ① 信息收集策略
-
-所需信息：产品图、产品名称+品类、核心卖点、目标人群、视频用途。
-
-**优先级顺序**：
-1. 用户已提供的直接使用
-2. 缺失的信息 → 先用 WebSearch 搜索产品/品牌相关信息补充
-3. 搜不到的 → 根据产品图和品类特征自行推断
-
-**只有产品图是必须的**，其他信息若实在无从判断，才简短询问用户（一次问完，不逐一追问）。
+Step 1: Competitive reference search (WebSearch) + analyze product + output storyboard plan (self-review before showing to user, then proceed directly)
+Step 2: Upload product images, create project, send script
+Step 3: Filter check
+Step 4: Clear all tail frames
+Step 5: Generate audio (voiceover is the core, BGM is supplementary)
+Step 6: Generate all videos
 
 ---
 
-### ② 竞品参考检索（先于分镜执行）
+## Step 1: Analyze Product + Output Storyboard Plan
 
-在开始写分镜之前，**用 WebSearch 工具搜索 1-2 次**，找到同类产品展示视频的结构参考。
+**Core task**: Not to build a visual world, but to **communicate each core selling point of the product clearly through visuals**.
 
-**搜索策略**：
+### ① Information Gathering Strategy
 
-根据产品品类构造搜索词：
+Required information: product images, product name + category, core selling points, target audience, video purpose.
 
-| 品类 | 搜索词示例 |
-|------|---------|
-| 数码/3C | `"[品类]" product demo video structure shot list ecommerce` |
-| 美妆/护肤 | `"[品类]" product showcase video skincare ecommerce structure` |
-| 服装/配件 | `"[品类]" fashion product video shot list ecommerce` |
-| 家居/厨电 | `"[品类]" product feature demo video structure homepage` |
-| 食品/健康 | `"[品类]" product video ecommerce food showcase structure` |
+**Priority order**:
+1. Use whatever the user has already provided directly
+2. Missing information → first use WebSearch to find product/brand-related information to fill in
+3. Cannot be found → infer based on product image and category characteristics
 
-**从搜索结果中提取以下信息**（如果找到有价值的参考）：
-
-- **行业惯用的展示结构**：同类产品通常如何排列卖点顺序
-- **哪些功能值得视觉化**：行业内什么功能最常被演示（防水测试/充电速度/材质特写等）
-- **常见的使用场景模板**：什么场景最能引发目标用户共鸣
-
-**重要原则**：
-- 参考是为了找到行业标准展示结构，不是为了模仿
-- 搜索过程不展示给用户，直接消化后用于分镜设计
+**Only the product image is mandatory**. For other information that truly cannot be determined, ask the user briefly — all at once, not one question at a time.
 
 ---
 
-### ③ 产品分析与展示策略
+### ② Competitive Reference Search (execute before storyboarding)
 
-从用户提供的产品图和卖点中，确立以下四项。**若用户未明确说明，根据产品品类经验主动判断，不询问。**
+Before writing the storyboard, **use the WebSearch tool to search 1-2 times** and find structural references for similar product showcase videos.
 
-**产品核心价值主张**（1 句话）：整个视频围绕的那一个最重要的理由是什么？
-- 功能型（解决了什么痛点）→ 展示前后对比、功能演示
-- 品质型（材质/工艺更好）→ 展示细节特写、质感对比
-- 场景型（让生活更美好）→ 展示使用场景、情感联结
-- 效率型（节省时间/精力）→ 展示速度、简便性演示
+**Search strategy**:
 
-**卖点展示顺序**（根据转化逻辑排序）：
-1. 最强卖点（解决最大痛点）→ 视频前 1/3 展示
-2. 支撑卖点（3-4 条）→ 视频中段依次展示
-3. 品牌/品质背书 → 视频后段建立信任
-4. CTA / 促购信息 → 收尾
+Construct search terms based on product category:
 
-**产品在画面中的角色**（每个镜头都要明确）：
-- **产品特写**：展示外观、材质、细节
-- **产品使用中**：手持/佩戴/操作，展示真实使用状态
-- **功能演示**：夸张化展示某一功能（防水泡水、充电速度等）
-- **场景融入**：产品自然存在于使用环境中（非强调产品）
-- **效果对比**：使用前后，或与同类产品对比
+| Category | Example Search Terms |
+|----------|----------------------|
+| Electronics/3C | `"[category]" product demo video structure shot list ecommerce` |
+| Beauty/Skincare | `"[category]" product showcase video skincare ecommerce structure` |
+| Apparel/Accessories | `"[category]" fashion product video shot list ecommerce` |
+| Home/Kitchen Appliances | `"[category]" product feature demo video structure homepage` |
+| Food/Health | `"[category]" product video ecommerce food showcase structure` |
 
-**旁白策略**：
-- 每个卖点镜头应有 1 句旁白，直接点明功能/好处（"30 分钟充满，全天不断电"）
-- 旁白语气：不是广告腔，是在向朋友推荐
+**Extract the following from search results** (if valuable references are found):
 
----
+- **Industry-standard showcase structure**: how similar products typically arrange the order of selling points
+- **Which features are worth visualizing**: what features are most commonly demonstrated in the industry (waterproof testing / charging speed / material close-ups, etc.)
+- **Common usage scenario templates**: what scenarios resonate most with the target audience
 
-### ④ 分镜方案（基于卖点结构，而非情绪弧线）
-
-规划 8-12 个镜头，时长 30-60 秒：
-
-**展示型商品视频的标准结构**：
-
-| 段落 | 镜头数 | 作用 | 时长 |
-|------|--------|------|------|
-| 开场定格 | 1-2 | 产品最美角度，建立第一印象 | 2-4s |
-| 核心卖点展示 | 4-8 | 每个卖点 1 个镜头，功能可视化 | 每镜 3-5s |
-| 使用场景 | 2-3 | 真实使用状态，情感共鸣 | 每镜 3-4s |
-| CTA 收尾 | 1-2 | 产品全貌 + 品牌/价格/行动引导 | 2-4s |
-
-**镜头类型参考**（根据产品和卖点自由发明）：
-
-| 镜头类型 | 适合展示的内容 |
-|--------|------------|
-| 产品英雄镜头（Hero Shot） | 开场定格，最美角度，干净背景，产品全貌 |
-| 材质细节特写 | 面料质感、表面工艺、接缝/按钮细节 |
-| 功能演示镜头 | 防水淋水、快速充电、展开折叠、一键操作 |
-| 手部操作镜头 | 手持使用、手指点击、握持手感展示 |
-| 使用场景镜头 | 人物在真实场景中使用（咖啡馆/健身房/厨房等） |
-| 效果对比镜头 | 使用前后对比，或与普通产品并排对比 |
-| 卖点标注镜头 | 产品图 + 文字标注功能参数（需确认系统支持） |
-| CTA 收尾镜头 | 产品正面定格，品牌名/价格/口号 |
-
-**节奏参考**（功能展示视频节奏比氛围片更匀速）：
-- 开场 1-2 镜：稍慢（2-4s），让产品第一印象落住
-- 卖点展示：每镜 3-5s，有足够时间看清并理解功能
-- 使用场景：可以稍慢（4-5s），让情感联结有时间产生
-- CTA 收尾：2-3s，干净利落
+**Important principles**:
+- References are for finding industry-standard showcase structures, not for imitation
+- The search process is not shown to the user; digest it and apply it directly to storyboard design
 
 ---
 
-### ⑤ 自检：对照功能展示原则 review 一次分镜方案
+### ③ Product Analysis and Showcase Strategy
 
-生成分镜后，**在展示给用户之前先过以下检查清单**，发现问题直接修正：
+From the product images and selling points provided by the user, establish the following four items. **If the user has not explicitly stated them, proactively determine them based on product category experience — do not ask.**
 
-| 检查项 | 判断标准 |
-|------|--------|
-| 每个镜头功能清晰度 | 看完这个镜头，观众能记住一个具体卖点吗？还是只是"感觉不错"？ |
-| 产品可见度 | 每个镜头产品是否清晰可见，没有被环境或人物遮挡过多 |
-| 卖点覆盖完整性 | 用户提供的 3-5 条核心卖点，是否每条都有对应镜头？ |
-| 旁白可行性 | 每个卖点镜头是否有对应的旁白台词可以写？台词能在镜头时长内说完？ |
-| 首帧构图 | 每个镜头的首帧是产品主体，而不是环境或人物背面 |
-| 收尾完整性 | 有没有清晰的 CTA 收尾镜头（品牌/价格/行动引导）？ |
+**Core value proposition** (1 sentence): What is the single most important reason the entire video revolves around?
+- Functional (what pain point does it solve) → show before/after comparison, feature demo
+- Quality (better material/craftsmanship) → show detail close-ups, texture comparison
+- Scenario (makes life better) → show usage scenarios, emotional connection
+- Efficiency (saves time/effort) → show speed, ease-of-use demonstration
 
-自检后如有问题，直接修正分镜，再展示给用户。
+**Selling point display order** (ordered by conversion logic):
+1. Strongest selling point (solves the biggest pain point) → display in the first 1/3 of the video
+2. Supporting selling points (3-4 items) → display sequentially in the middle section
+3. Brand/quality endorsement → build trust in the latter section
+4. CTA / purchase-driving information → closing
+
+**The product's role in each frame** (must be explicit for every shot):
+- **Product close-up**: showcase appearance, material, and details
+- **Product in use**: hand-held / worn / operated, showing real usage state
+- **Feature demonstration**: exaggeratedly showcase a single feature (waterproof submersion, charging speed, etc.)
+- **Scene integration**: product naturally present in the usage environment (not emphasizing the product)
+- **Effect comparison**: before vs. after using, or comparison with similar products
+
+**Voiceover strategy**:
+- Each selling-point shot should have 1 voiceover line directly naming the feature/benefit ("Fully charged in 30 minutes, all-day power")
+- Voiceover tone: not an advertising voice, but a recommendation to a friend
 
 ---
 
-### ⑥ 向用户展示分镜方案，直接进入 Step 2
+### ④ Storyboard Plan (based on selling-point structure, not emotional arc)
+
+Plan 8–12 shots, 30–60 seconds total:
+
+**Standard structure for a product showcase video**:
+
+| Section | Shot Count | Purpose | Duration |
+|---------|------------|---------|----------|
+| Opening freeze | 1-2 | Best product angle, establish first impression | 2-4s |
+| Core selling point showcase | 4-8 | One shot per selling point, feature visualization | 3-5s each |
+| Usage scenarios | 2-3 | Real usage state, emotional resonance | 3-4s each |
+| CTA closing | 1-2 | Full product view + brand/price/action prompt | 2-4s |
+
+**Shot type reference** (freely invent based on product and selling points):
+
+| Shot Type | Suitable Content |
+|-----------|-----------------|
+| Product Hero Shot | Opening freeze, best angle, clean background, full product view |
+| Material detail close-up | Fabric texture, surface craftsmanship, seam/button details |
+| Feature demo shot | Waterproofing, fast charging, unfolding/folding, one-touch operation |
+| Hand operation shot | Hand-held use, finger taps, grip feel demonstration |
+| Usage scenario shot | Person using the product in a real setting (café / gym / kitchen, etc.) |
+| Effect comparison shot | Before vs. after use, or side-by-side comparison with an ordinary product |
+| Annotated selling-point shot | Product image + text annotations of feature specs (confirm system support) |
+| CTA closing shot | Product front-facing freeze, brand name / price / slogan |
+
+**Pacing reference** (feature showcase videos have a more even pace than atmosphere films):
+- Opening 1-2 shots: slightly slower (2-4s) to let the product's first impression land
+- Selling point showcase: 3-5s per shot, enough time to see and understand the feature clearly
+- Usage scenarios: can be slightly slower (4-5s), giving emotional connection time to form
+- CTA closing: 2-3s, clean and crisp
+
+---
+
+### ⑤ Self-review: Review the storyboard plan against feature showcase principles
+
+After generating the storyboard, **go through the following checklist before showing it to the user**, and fix any issues directly:
+
+| Check Item | Judgment Criteria |
+|------------|-------------------|
+| Feature clarity per shot | After watching this shot, can the audience remember one specific selling point? Or does it just "feel nice"? |
+| Product visibility | Is the product clearly visible in each shot, not overly obscured by the environment or people? |
+| Selling point coverage completeness | Do the 3-5 core selling points provided by the user each have a corresponding shot? |
+| Voiceover feasibility | Does each selling-point shot have a corresponding voiceover line? Can the line be spoken within the shot duration? |
+| Opening frame composition | The opening frame of each shot should feature the product as the main subject, not the environment or the back of a person |
+| Closing completeness | Is there a clear CTA closing shot (brand / price / action prompt)? |
+
+If any issues are found during self-review, fix the storyboard directly, then show it to the user.
+
+---
+
+### ⑥ Show the storyboard plan to the user, then proceed directly to Step 2
 
 ```
-【商品展示视频方案】
+[Product Showcase Video Plan]
 
-产品：[产品名]
-核心价值主张：[1句话]
-目标人群：[描述]
-展示逻辑：[卖点排列顺序说明]
+Product: [product name]
+Core value proposition: [1 sentence]
+Target audience: [description]
+Showcase logic: [description of selling point order]
 
-全局视觉风格：[具体描述，如"干净白底 + 浅灰辅助色，专业质感"]
-色彩基调：[主色+辅助色]
-旁白风格：[音色描述，如"女声，亲切自然，语速适中，像在向朋友推荐"]
-BGM：[节奏和情绪，如"轻快简洁电子配乐，BPM 120，无歌词"]
+Global visual style: [specific description, e.g., "clean white background + light gray accent, professional quality feel"]
+Color palette: [primary color + accent color]
+Voiceover style: [voice description, e.g., "female voice, warm and natural, moderate pace, like recommending to a friend"]
+BGM: [rhythm and mood, e.g., "upbeat minimal electronic music, BPM 120, no lyrics"]
 
-分镜设计（共N镜，约Xs）：
-镜头1（Xs）- [镜头类型]：[画面描述]
-旁白：「[台词]」
+Storyboard design (N shots total, approx. Xs):
+Shot 1 (Xs) - [shot type]: [visual description]
+Voiceover: "[line]"
 
-镜头2（Xs）- [镜头类型]：[画面描述]
-旁白：「[台词]」
+Shot 2 (Xs) - [shot type]: [visual description]
+Voiceover: "[line]"
 ...
 
-（正在上传产品图……）
+(Uploading product images now...)
 ```
 
 ---
 
-## Step 2：上传产品图，创建项目，发送脚本
+## Step 2: Upload Product Images, Create Project, Send Script
 
-### ① 上传产品参考图
+### ① Upload product reference images
 
-**所有提供的产品图都需要上传**（多角度产品图支持更丰富的镜头描述）：
+**All provided product images must be uploaded** (multi-angle product images support richer shot descriptions):
 
-上传 产品图.jpg → 获取 asset_id（每张图分别上传）
+Upload product-image.jpg → get asset_id (upload each image separately)
 
-记录每张图的 asset_id，在脚本中按镜头用途引用。
+Record the asset_id of each image and reference them in the script by shot purpose.
 
 ---
 
-### ② 发送完整脚本
+### ② Send the complete script
 
 ```
-请根据以下脚本创建商品展示视频项目，中文，[分辨率]。
+Please create a product showcase video project based on the following script, [language], [resolution].
 
-全局视觉风格：[风格描述，如"干净简洁，产品始终清晰可见，专业电商质感"]
-色彩基调：[主色+辅助色]
-旁白：[音色描述，如"亲切自然的女声，语速适中，像在向朋友推荐"]
-BGM：[轻快/大气/简洁的配乐描述]
+Global visual style: [style description, e.g., "clean and minimal, product always clearly visible, professional e-commerce quality"]
+Color palette: [primary color + accent color]
+Voiceover: [voice description, e.g., "warm and natural female voice, moderate pace, like recommending to a friend"]
+BGM: [description of upbeat / grand / minimal music]
 
-产品参考图（正面）：$<asset_id_1>
-产品参考图（侧面）：$<asset_id_2>  [如有多角度]
-产品视觉描述：[颜色/形状/材质/尺寸感，让所有镜头的产品造型保持一致]
+Product reference image (front): $<asset_id_1>
+Product reference image (side): $<asset_id_2>  [if multiple angles available]
+Product visual description: [color / shape / material / size sense, to keep the product appearance consistent across all shots]
 
-[如有使用场景中出现人物]
-场景人物设定：
-- [人物描述：年龄感/性别/外观，场景中的使用状态]
+[If people appear in usage scenarios]
+Scene character setup:
+- [Character description: approximate age / gender / appearance, usage state in the scene]
 
-图像生成要求：每个镜头对应单一时间点的完整构图，产品始终清晰可见，不含分割线或多视角并列。每个镜头只需首帧，不要设置尾帧（tail_frame）。
+Image generation requirements: Each shot corresponds to a single point-in-time complete composition; the whole image is one continuous scene with no dividing lines or multi-angle juxtaposition. Each shot requires only the start frame; do not set a tail frame (tail_frame).
 
---- 以下为分镜脚本 ---
+--- Storyboard script follows below ---
 
-【镜头1】[时长]s | [镜头类型]
-画面：[具体画面描述，产品放置/角度/背景/光线]
-旁白：「[对应卖点的台词]」
+[Shot 1] [duration]s | [shot type]
+Visual: [specific visual description — product placement / angle / background / lighting]
+Voiceover: "[corresponding selling-point line]"
 
-【镜头2】[时长]s | [镜头类型]
-画面：[...]
-旁白：「[...]」
+[Shot 2] [duration]s | [shot type]
+Visual: [...]
+Voiceover: "[...]"
 
 ...
 ```
 
-### 展示型镜头描述要点
+### Key points for writing showcase-type shot descriptions
 
-**写功能，不写氛围**——镜头描述的重心是产品的特征和功能信息：
-
-```
-❌ 氛围导向："产品在阳光下闪耀，充满活力与生命力"
-✅ 功能导向："产品从正面 45 度角展示，镜面级金属背板清晰可见，
-             产品放置在纯白背景上，柔和正面光均匀照射，无反光遮挡"
-
-❌ 模糊场景："人物在户外使用产品，感受自然的美好"
-✅ 具体使用："使用者站立，左手自然握持产品，拇指操作屏幕，
-             画面清晰展示单手握持的舒适感，背景为虚化的户外环境"
-```
-
-**产品在画面中的三种主角状态**：
-
-| 产品状态 | 画面描述重点 |
-|--------|-----------|
-| 独立展示 | 背景纯净（白/浅灰/渐变），正面/侧面/俯视角，产品充满画面 70-80% |
-| 手持操作 | 手握/触控的姿势细节，产品朝向镜头，背景虚化，手部动作自然 |
-| 场景融入 | 真实使用环境，产品位于画面黄金分割点，使用状态清晰可辨 |
-
-**功能演示镜头描述**（最重要，写得越具体生成效果越好）：
+**Write function, not atmosphere** — the focus of the shot description is the product's features and functional information:
 
 ```
-防水演示示例：
-产品完全浸入透明水槽，水面清晰，产品屏幕在水下仍可见，
-从侧前方 45 度视角拍摄，水波纹反光，展示产品正面，无气泡遮挡关键区域
+❌ Atmosphere-driven: "The product gleams in the sunlight, full of energy and vitality"
+✅ Function-driven: "Product displayed at a 45-degree front angle, mirror-grade metal back panel clearly visible,
+             product placed on a pure white background, soft front lighting evenly illuminated, no glare obstruction"
 
-快充演示示例：
-产品平放于桌面，充电线插入，屏幕显示充电进度，
-特写拍摄屏幕上的电量数字（从15%到45%的变化感），
-俯视 45 度角，桌面纯白/浅灰，光线均匀
+❌ Vague scene: "Person uses the product outdoors, feeling the beauty of nature"
+✅ Specific usage: "User standing, naturally holding the product in their left hand, thumb operating the screen,
+             the image clearly shows the comfort of single-hand grip, background is a softly blurred outdoor environment"
 ```
 
-发送后等待完成。
+**Three main-subject states of the product in frame**:
+
+| Product State | Visual Description Focus |
+|---------------|------------------------|
+| Standalone display | Pure background (white / light gray / gradient), front / side / top-down angle, product fills 70-80% of frame |
+| Hand-held operation | Grip/touch posture details, product facing the camera, background blurred, natural hand movement |
+| Scene integration | Real usage environment, product at the golden ratio point of the frame, usage state clearly identifiable |
+
+**Feature demonstration shot descriptions** (most important — the more specific, the better the generation):
+
+```
+Waterproofing demo example:
+Product fully submerged in a clear water tank, water surface clearly visible, product screen still visible underwater,
+filmed from a 45-degree front-side angle, water ripple reflections, product front face displayed, no bubbles obscuring key areas
+
+Fast charging demo example:
+Product lying flat on a desk, charging cable inserted, screen showing charging progress,
+close-up of the battery percentage on screen (sense of change from 15% to 45%),
+45-degree top-down angle, desk surface pure white / light gray, even lighting
+```
+
+Send and wait for completion.
 
 ---
 
-## Step 3：Filter 检查
+## Step 3: Filter Check
 
-检查镜头
-检查台词
-检查角色
+Check shots
+Check dialogue
+Check characters
 
-**展示视频专项检查要点**：
-- 每个卖点镜头是否有对应旁白（`filter_dialogs` 检查台词是否完整）
-- 产品镜头时长：每镜至少 3s，确保旁白可以说完
-- 有场景人物时：确认人物描述在所有镜头中一致
-- 旁白音色设置：`global.narration` 或角色 voice 字段是否已设置
+**Showcase video specific check points**:
+- Does each selling-point shot have a corresponding voiceover (`filter_dialogs` checks that all lines are complete)
+- Shot duration for product shots: at least 3s per shot, to ensure the voiceover can be spoken in full
+- When scene characters are present: confirm that character descriptions are consistent across all shots
+- Voiceover voice setting: is `global.narration` or the character's voice field already set
 
 ---
 
-## Step 4：清除所有尾帧
+## Step 4: Clear All Tail Frames
 
 ```
-发消息：「请清除所有镜头的尾帧（tail_frame），只保留首帧」
+Send message: "Please clear the tail frame (tail_frame) of all shots, keeping only the start frame"
 ```
 
-`get_state` 或 `filter_shots` 确认无尾帧残留。
+Use `get_state` or `filter_shots` to confirm no tail frames remain.
 
 ---
 
-## Step 5：生成音频
+## Step 5: Generate Audio
 
-生成音频
+Generate audio
 
-确认面板中所有项后点击确认，等待完成。
+Confirm all items in the panel, then click confirm and wait for completion.
 
-### 旁白是展示视频的信息骨架
+### Voiceover is the information backbone of a showcase video
 
-展示视频与氛围片相反——旁白承担传递功能信息的核心职责：
+Unlike atmosphere films, showcase videos rely on voiceover to carry the core responsibility of conveying functional information:
 
-**旁白描述公式**：`[性别+亲切感] + [语速] + [语气风格]`
+**Voiceover description formula**: `[gender + warmth] + [pace] + [tone style]`
 
-| 产品类型 | 旁白描述示例 |
-|--------|-----------|
-| 大众消费品 | 年轻女声，语速适中，亲切自然，像在向朋友推荐，无推销腔 |
-| 数码/3C | 年轻男声，清晰有力，语速偏快，专业但不生硬 |
-| 高端/奢侈品 | 女声，语速偏慢，低调优雅，有质感的停顿 |
-| 母婴/儿童 | 女声，温柔关怀，语速慢，安全感十足 |
+| Product Type | Voiceover Description Example |
+|--------------|-------------------------------|
+| Mass consumer goods | Young female voice, moderate pace, warm and natural, like recommending to a friend, no sales pitch |
+| Electronics/3C | Young male voice, clear and strong, slightly faster pace, professional but not stiff |
+| High-end / luxury | Female voice, slightly slower pace, understated and elegant, quality pauses |
+| Mother & baby / children | Female voice, gentle and caring, slow pace, full of reassurance |
 
-### BGM（辅助旁白，不抢主导）
+### BGM (supplementary to voiceover, must not dominate)
 
-展示视频中 BGM 是背景，不能盖过旁白：
+In showcase videos, BGM is background and must not drown out the voiceover:
 
-**BGM 描述公式**：`[乐器质感] + [情绪] + [音量定位：背景级别]`
+**BGM description formula**: `[instrument texture] + [mood] + [volume position: background level]`
 
-| 产品情绪 | BGM 描述示例 |
-|--------|-----------|
-| 科技/现代感 | 轻快简洁电子音效，BPM 120，轻盈背景感，无歌词 |
-| 生活品质感 | 温暖吉他 + 轻钢琴，BPM 90，舒适自然，背景级别 |
-| 运动/活力 | 节奏感强的电子乐，BPM 130，有动感，背景级别不抢旁白 |
-| 高端/精品 | 极简钢琴或弦乐，低调克制，背景级别，气质优雅 |
-
----
-
-## Step 6：生成所有视频
-
-生成所有视频
-
-全选所有镜头后确认，等待完成。
+| Product Mood | BGM Description Example |
+|--------------|-------------------------|
+| Tech / modern | Upbeat minimal electronic sound, BPM 120, light background feel, no lyrics |
+| Lifestyle quality | Warm guitar + light piano, BPM 90, comfortable and natural, background level |
+| Sports / energy | Rhythmic electronic music, BPM 130, dynamic, background level that does not overpower voiceover |
+| High-end / premium | Minimal piano or strings, understated and restrained, background level, elegant quality |
 
 ---
 
-## 关键经验
+## Step 6: Generate All Videos
 
-- **每个镜头服务于一个卖点**：写分镜时先列卖点清单，再每条卖点配一个镜头，而不是先想画面再想旁白
-- **产品在画面中始终清晰**：展示视频最大忌讳是产品被遮挡、过小、过暗——每个镜头的画面描述都要明确产品在画面中的比例和清晰度
-- **功能演示镜头写得越具体越好**：防水/充电/折叠等功能演示，把具体的状态（水位高度、电量数字、折叠角度）写进描述，AI 才能生成有信息量的画面
-- **旁白台词要在镜头时长内说完**：3 秒镜头配 15 字台词，5 秒镜头配 25 字台词，超出就要延长镜头时长
-- **开场英雄镜头要给足时间**：产品第一次出现用 2-4s 的慢速定格，让观众看清楚产品长什么样
-- **CTA 收尾必须明确**：最后 1-2 个镜头要有产品全貌 + 核心卖点总结或价格/行动信息
-- **多角度产品图全部上传**：上传的图越多，不同镜头的产品造型参考越准确
-- **旁白先于视频生成**：旁白时长决定镜头视频时长，Step 5 音频必须在 Step 6 之前完成
-- **不使用尾帧**：产品展示视频镜头间切换需要干净利落
-- **undo/redo**：`workspace.btn_undo` / `workspace.btn_redo` 可回退误操作
+Generate all videos
+
+Select all shots, then confirm and wait for completion.
 
 ---
 
-## 附录：产品类型与镜头结构速查
+## Key Learnings
 
-### 常见品类的展示结构参考
+- **Each shot serves one selling point**: when writing the storyboard, first list the selling points, then assign one shot per point — do not think of visuals first and voiceover second
+- **Product must always be clearly visible in frame**: the biggest pitfall in showcase videos is the product being obscured, too small, or too dark — every shot description must specify the product's proportion and clarity in frame
+- **Feature demo shots should be as specific as possible**: for waterproofing / charging / folding and other feature demos, write in the specific state (water level height, battery percentage, fold angle) so the AI can generate informative visuals
+- **Voiceover lines must fit within the shot duration**: a 3-second shot should pair with a ~15-character line; a 5-second shot with ~25 characters; if it exceeds, extend the shot duration
+- **Give the opening hero shot enough time**: the first appearance of the product should be a slow freeze of 2-4s, giving the audience time to take in what the product looks like
+- **CTA closing must be explicit**: the last 1-2 shots must include the full product view + a summary of core selling points or price/action information
+- **Upload all multi-angle product images**: the more images uploaded, the more accurate the product appearance reference across different shots
+- **Voiceover before video generation**: voiceover duration determines video shot duration; Step 5 audio must be completed before Step 6
+- **Do not use tail frames**: clean cuts are needed between shots in a product showcase video
+- **undo/redo**: `workspace.btn_undo` / `workspace.btn_redo` can revert accidental operations
 
-| 品类 | 推荐结构 |
-|------|--------|
-| 数码/3C | 英雄镜头 → 外观细节 → 功能演示（2-3个）→ 使用场景 → 规格参数 → CTA |
-| 美妆/护肤 | 产品特写 → 质地展示（倒出/涂抹）→ 使用步骤 → 效果前后对比 → CTA |
-| 服装/配件 | 平铺展示 → 细节特写（面料/工艺）→ 上身/佩戴效果 → 搭配场景 → CTA |
-| 家居/厨电 | 整体外观 → 核心功能演示 → 使用场景 → 差异化细节 → CTA |
-| 食品/饮料 | 产品特写 → 食材/成分展示 → 制作/开封过程 → 食用场景 → CTA |
+---
 
-### 分辨率选择
+## Appendix: Product Category Quick Reference for Shot Structure
 
-**默认：9:16 竖屏**（商品主图主力格式）
+### Recommended showcase structures by common category
 
-| 使用场景 | 分辨率 |
-|--------|------|
-| 淘宝/京东商品主图/抖音商品卡（默认）| 720×1280（9:16）|
-| 独立站/YouTube 商品视频 | 1280×720（16:9）|
-| 小红书方形展示 | 720×720（1:1）|
+| Category | Recommended Structure |
+|----------|-----------------------|
+| Electronics/3C | Hero shot → exterior details → feature demos (2-3) → usage scenario → specs → CTA |
+| Beauty/Skincare | Product close-up → texture display (pour/apply) → usage steps → before/after effect → CTA |
+| Apparel/Accessories | Flat lay display → detail close-up (fabric/craftsmanship) → worn/fitted effect → styled scene → CTA |
+| Home/Kitchen Appliances | Overall exterior → core feature demo → usage scenario → differentiating details → CTA |
+| Food/Beverage | Product close-up → ingredients/contents display → preparation/unboxing process → consumption scene → CTA |
 
+### Resolution selection
+
+**Default: 9:16 vertical** (primary format for product main images)
+
+| Use Case | Resolution |
+|----------|------------|
+| Taobao / JD product main image / TikTok product card (default) | 720×1280 (9:16) |
+| Independent store / YouTube product video | 1280×720 (16:9) |
+| Xiaohongshu square display | 720×720 (1:1) |

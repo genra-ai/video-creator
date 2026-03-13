@@ -1,27 +1,27 @@
-# 视频续写 — AI Bridge 工作流
+# Video Continuation — AI Bridge Workflow
 
-读取已有视频项目，判断内容类型，结合用户续写需求，生成后续镜头并走完对应类型的完整生成流程。
+Read an existing video project, determine the content type, incorporate the user's continuation requirements, generate subsequent shots, and complete the full generation pipeline for the corresponding type.
 
-## 流程概览
+## Workflow Overview
 
 ```
-Step 0：获取连接信息，进入已有项目
-Step 1：读取项目内容 → 判断类型 → 提取延续要素
-Step 2：理解续写需求 → 设计后续分镜（展示给用户，直接继续）
-Step 3：发送续写脚本（含延续要素）
-Step 4：Filter 检查
-Step 5：尾帧处理（根据类型不同）
-Step 6：生成音频
-Step 7：生成视频
+Step 0: Retrieve connection info, open the existing project
+Step 1: Read project content → determine type → extract continuity elements
+Step 2: Understand continuation requirements → design subsequent shots (show to user, proceed immediately)
+Step 3: Send the continuation script (with continuity elements)
+Step 4: Filter check
+Step 5: Tail frame handling (varies by type)
+Step 6: Generate audio
+Step 7: Generate video
 ```
 
 ---
 
-## Step 0：获取连接信息，进入已有项目
+## Step 0: Retrieve Connection Info, Open the Existing Project
 
-调用 `get_state` 获取登录状态，未登录时展示 `login_url`。
+Call `get_state` to get login status. If not logged in, show `login_url`.
 
-登录后从项目列表找到目标项目，点击进入对应 draft：
+After login, locate the target project in the project list and click to enter the corresponding draft:
 
 ```
 click: dashboard.chat.{projectId}.{chatId}
@@ -29,281 +29,281 @@ click: dashboard.chat.{projectId}.{chatId}
 
 ---
 
-## Step 1：读取项目内容 → 判断类型 → 提取延续要素
+## Step 1: Read Project Content → Determine Type → Extract Continuity Elements
 
-依次调用以下 filter，**完整记录**每项内容：
+Call the following filters in sequence, **recording each item in full**:
 
 ```
-sidebar.filter.all        → 全局风格、BGM 描述、总镜头数
-sidebar.filter.shots      → 所有镜头描述、时长、最后 2 个镜头（续写连接点）
-sidebar.filter.dialogs    → 台词内容、角色归属、旁白/角色对话类型
-sidebar.filter.characters → 所有角色的 identity_anchor（完整原文，不改动）
-sidebar.filter.locations  → 所有场景描述（完整原文，不改动）
+sidebar.filter.all        → global style, BGM description, total shot count
+sidebar.filter.shots      → all shot descriptions, durations, last 2 shots (continuation connection points)
+sidebar.filter.dialogs    → dialog content, character attribution, narration/character dialog type
+sidebar.filter.characters → identity_anchor for all characters (exact original text, do not alter)
+sidebar.filter.locations  → all scene descriptions (exact original text, do not alter)
 ```
 
-### 类型判断（从内容语义推断）
+### Type Determination (inferred from content semantics)
 
-| 特征 | 判定类型 |
+| Characteristics | Determined Type |
 |------|---------|
-| 有 character + dialog，台词涉及 ≥2 个角色的对话 | **script-to-video** |
-| 有 character + dialog，仅1个角色/旁白，固定景别，面向镜头讲话 | **voiceover** |
-| 有 narration（旁白） + 产品功能/卖点描述，以功能展示为核心 | **product-showcase** |
-| 无角色/台词，纯画面 + BGM，情绪/品牌氛围驱动，无产品功能说明 | **ad-to-video** |
-| 无角色/台词，纯画面 + BGM，画面描述含参考原图 asset_id | **photo-vlog** |
+| Has character + dialog, dialog involves ≥2 characters in conversation | **script-to-video** |
+| Has character + dialog, only 1 character/narrator, fixed framing, speaks directly to camera | **voiceover** |
+| Has narration + product feature/selling point descriptions, core is feature demonstration | **product-showcase** |
+| No characters/dialog, pure visuals + BGM, emotion/brand atmosphere driven, no product feature description | **ad-to-video** |
+| No characters/dialog, pure visuals + BGM, shot descriptions contain reference photo asset_id | **photo-vlog** |
 
-> **ad-to-video vs product-showcase 的核心区别**：ad-to-video 是商业氛围广告（建立品牌情绪世界，产品自然融入），product-showcase 是电商产品功能广告（每个镜头服务于一个可视化卖点）。从镜头描述的重心判断——写情绪/光线/氛围的是 ad-to-video，写产品角度/功能/旁白台词的是 product-showcase。
+> **Core distinction between ad-to-video and product-showcase**: ad-to-video is a brand atmosphere ad (builds the brand's emotional world, product naturally integrated); product-showcase is an e-commerce product feature ad (each shot serves a visualizable selling point). Judge by the focus of shot descriptions — writing about emotion/light/atmosphere → ad-to-video; writing about product angles/features/narration lines → product-showcase.
 
-### 向用户展示分析结果
-
-```
-【已有项目分析】
-
-类型：[判定类型]
-现有镜头数：N 个，约 Xs
-全局风格：[...]
-BGM：[...]
-
-角色：（script-to-video / voiceover 时列出）
-- [角色名]：[identity_anchor 原文]
-
-场景：（script-to-video / voiceover 时列出）
-- [场景名]：[描述原文]
-
-最后 2 个镜头（续写连接点）：
-- 镜头 N-1：[描述摘要]
-- 镜头 N：[描述摘要]
-```
-
----
-
-## Step 2：理解续写需求 → 设计后续分镜
-
-结合用户的续写需求（内容方向、镜头数、结局等），按对应类型的分镜逻辑设计后续镜头。
-
-**延续性要求**：
-- 风格、BGM、色调与原项目保持一致
-- 叙事从最后一个镜头自然接续，不能有内容跳跃
-- script-to-video / voiceover：角色外形、场景设定原文不变
-
-向用户展示分镜草案，**直接继续 Step 3，不等待确认**：
+### Show Analysis Results to User
 
 ```
-【续写分镜方案】
+[Existing Project Analysis]
 
-续写镜头数：N 个，约 Xs（原项目 M 个镜头后接续）
-叙事接续点：[说明从哪里续接]
+Type: [determined type]
+Existing shot count: N shots, approx. Xs
+Global style: [...]
+BGM: [...]
 
-续写镜头 N+1（Xs）- [镜头类型/内容摘要]
-续写镜头 N+2（Xs）- [...]
-...
+Characters: (list for script-to-video / voiceover)
+- [Character name]: [identity_anchor original text]
 
-（正在发送续写脚本……）
+Scenes: (list for script-to-video / voiceover)
+- [Scene name]: [description original text]
+
+Last 2 shots (continuation connection points):
+- Shot N-1: [description summary]
+- Shot N: [description summary]
 ```
 
 ---
 
-## Step 3：发送续写脚本
+## Step 2: Understand Continuation Requirements → Design Subsequent Shots
 
-用 `chat.input` 编辑后发送，消息头部必须带延续要素。
+Based on the user's continuation requirements (content direction, shot count, ending, etc.), design the subsequent shots following the storyboard logic of the corresponding type.
 
-### 【script-to-video 续写】
+**Continuity requirements**:
+- Style, BGM, and color tone must remain consistent with the original project
+- Narrative must flow naturally from the last shot without content jumps
+- script-to-video / voiceover: character appearance and scene definitions must remain unchanged verbatim
 
-角色定义必须与原项目**一字不差**，场景定义同理：
+Show the shot draft to the user, **proceed directly to Step 3 without waiting for confirmation**:
 
 ```
-请继续当前项目，添加以下续写镜头。
+[Continuation Shot Plan]
 
-角色外形提醒（与已有镜头完全一致，不可更改）：
-- [角色名]：[identity_anchor 完整原文]
-- [角色名]：[identity_anchor 完整原文]
+Continuation shot count: N shots, approx. Xs (continuing after shot M of the original project)
+Narrative continuation point: [explain where the continuation picks up]
 
-场景提醒：
-- [场景名]：[原文描述]
-
-图像生成要求：每个镜头对应单一时间点的完整电影构图，不含分割线或多视角并列。每个镜头只需首帧，不要设置尾帧（tail_frame）。
-
---- 续写分镜 ---
-
-【镜头N+1】[时长]s | [景别/镜头类型]
-画面：[描述]
-台词：「[台词]」（有台词时写，无则省略）
-
-【镜头N+2】[时长]s | [景别/镜头类型]
-画面：[描述]
-台词：「[台词]」
+Continuation shot N+1 (Xs) - [shot type/content summary]
+Continuation shot N+2 (Xs) - [...]
 ...
+
+(Sending continuation script now...)
 ```
 
-> 续写镜头 ≤8 个一次发送；>8 个分两条发送，第二条再次重复角色外形提醒。
+---
 
-### 【voiceover 续写】
+## Step 3: Send the Continuation Script
 
-角色和场景定义与原项目完全一致：
+Edit via `chat.input` and send. The message header must include the continuity elements.
+
+### [script-to-video Continuation]
+
+Character definitions must be **word-for-word identical** to the original project; scene definitions likewise:
 
 ```
-请继续当前项目，添加以下续写镜头。
+Please continue the current project by adding the following continuation shots.
 
-角色（与已有镜头完全一致）：
-- [角色名]：[identity_anchor 完整原文]，面向镜头说话，语速较快
+Character appearance reminder (exactly identical to existing shots, cannot be changed):
+- [Character name]: [identity_anchor full original text]
+- [Character name]: [identity_anchor full original text]
 
-场景（与已有镜头完全一致）：
-- [场景名]：[原文描述]
+Scene reminder:
+- [Scene name]: [original description]
 
-图像生成要求：景别固定为中景，人物在画面中大小和位置与已有镜头完全一致，每个镜头只需首帧，不要设置尾帧（tail_frame）。
+Image generation requirements: each shot corresponds to a complete cinematic composition at a single point in time, with no dividing lines or multi-angle collages. Each shot requires only a start frame; do not set a tail frame (tail_frame).
 
---- 续写分镜 ---
+--- Continuation Shots ---
 
-【镜头N+1】[时长]s
-画面：中景，[角色名]面向镜头，[表情/动作状态]
-台词：「[台词]」
+[Shot N+1] [duration]s | [framing/shot type]
+Visual: [description]
+Line: "[dialog]" (include when there is dialog; omit otherwise)
 
-【镜头N+2】[时长]s
-画面：中景，[角色名]面向镜头，[表情/动作状态]
-台词：「[台词]」
+[Shot N+2] [duration]s | [framing/shot type]
+Visual: [description]
+Line: "[dialog]"
 ...
 ```
 
-### 【product-showcase 续写】
+> Send ≤8 continuation shots in one message; if >8, split into two messages and repeat the character appearance reminder in the second message.
+
+### [voiceover Continuation]
+
+Character and scene definitions must be exactly identical to the original project:
 
 ```
-请继续当前项目，添加以下续写镜头。
+Please continue the current project by adding the following continuation shots.
 
-延续风格：[从已有项目读取的全局视觉风格原文]
-产品：与已有镜头一致
+Character (exactly identical to existing shots):
+- [Character name]: [identity_anchor full original text], speaking directly to camera, relatively fast pace
 
-图像生成要求：产品始终清晰可见，每个镜头只需首帧，不要设置尾帧（tail_frame）。
+Scene (exactly identical to existing shots):
+- [Scene name]: [original description]
 
---- 续写分镜 ---
+Image generation requirements: framing fixed at medium shot, the character's size and position in the frame must be completely identical to existing shots. Each shot requires only a start frame; do not set a tail frame (tail_frame).
 
-【镜头N+1】[时长]s | [镜头类型]
-画面：[描述]
-旁白：「[台词]」
+--- Continuation Shots ---
 
-【镜头N+2】[时长]s | [镜头类型]
-画面：[描述]
-旁白：「[台词]」
+[Shot N+1] [duration]s
+Visual: medium shot, [character name] facing camera, [expression/action state]
+Line: "[dialog]"
+
+[Shot N+2] [duration]s
+Visual: medium shot, [character name] facing camera, [expression/action state]
+Line: "[dialog]"
 ...
 ```
 
-### 【ad-to-video 续写】
+### [product-showcase Continuation]
 
 ```
-请继续当前项目，添加以下续写镜头。
+Please continue the current project by adding the following continuation shots.
 
-延续风格：[从已有项目读取的全局视觉风格原文]
-延续 BGM：[BGM 描述原文]
+Continuation style: [global visual style original text read from the existing project]
+Product: consistent with existing shots
 
-图像生成要求：每个镜头对应单一时间点的完整电影构图，不含分割线或多视角并列。每个镜头只需首帧，不要设置尾帧（tail_frame）。
+Image generation requirements: product must always be clearly visible. Each shot requires only a start frame; do not set a tail frame (tail_frame).
 
---- 续写分镜 ---
+--- Continuation Shots ---
 
-【镜头N+1】[时长]s | [镜头类型]
-画面：[描述]
+[Shot N+1] [duration]s | [shot type]
+Visual: [description]
+Narration: "[line]"
 
-【镜头N+2】[时长]s | [镜头类型]
-画面：[描述]
+[Shot N+2] [duration]s | [shot type]
+Visual: [description]
+Narration: "[line]"
 ...
 ```
 
-### 【photo-vlog 续写】
-
-先上传新照片，记录 asset_id：
+### [ad-to-video Continuation]
 
 ```
-upload: 新照片.jpg → asset_id_new
-```
+Please continue the current project by adding the following continuation shots.
 
-再发送脚本，asset_id 写入画面描述：
+Continuation style: [global visual style original text read from the existing project]
+Continuation BGM: [BGM description original text]
 
-```
-请继续当前项目，添加以下续写镜头。每个镜头只需首帧，不要设置尾帧（tail_frame）。
+Image generation requirements: each shot corresponds to a complete cinematic composition at a single point in time, with no dividing lines or multi-angle collages. Each shot requires only a start frame; do not set a tail frame (tail_frame).
 
---- 续写分镜 ---
+--- Continuation Shots ---
 
-【镜头N+1】[时长]s
-画面描述：参考原图 $asset_id_new1，保留原图构图、色调、主体内容，以此照片为基础生成首帧。[补充描述]
-运镜：[运镜描述]
+[Shot N+1] [duration]s | [shot type]
+Visual: [description]
+
+[Shot N+2] [duration]s | [shot type]
+Visual: [description]
 ...
 ```
 
-发送后等待完成。
+### [photo-vlog Continuation]
 
----
-
-## Step 4：Filter 检查
-
-调用 `sidebar.filter.shots` 检查续写镜头：
-- 镜头描述是否被正确解析
-- 时长是否足够说完台词（有台词时）
-
-调用 `sidebar.filter.dialogs` 检查台词：
-- 台词归属是否正确（script-to-video：多角色不能串）
-- 旁白镜头内容是否完整
-
-调用 `sidebar.filter.characters`（script-to-video / voiceover）：
-- 续写镜头的角色 identity_anchor 是否与已有镜头完全一致
-- 发现不一致立即用 `edit` 修正
-
-**发现问题立即用 `edit` 修正，不要攒到最后。**
-
----
-
-## Step 5：尾帧处理
-
-### voiceover — 设置首尾帧（相邻镜头衔接）
-
-先调用 `get_state` 或 `sidebar.filter.shots`，记录**所有镜头**（含已有+续写）的 start_frame asset_id。
-
-逐条发消息设置尾帧，**每条消息单独发送，等待响应后再发下一条**：
+Upload the new photos first and record the asset_id:
 
 ```
-发消息：「请把镜头[shot_id_已有最后一镜]的尾帧（tail_frame）设为 $<续写第1镜的start_frame_asset_id>」
-发消息：「请把镜头[shot_id_续写第1镜]的尾帧（tail_frame）设为 $<续写第2镜的start_frame_asset_id>」
-发消息：「请把镜头[shot_id_续写第2镜]的尾帧（tail_frame）设为 $<续写第3镜的start_frame_asset_id>」
-...（续写最后一个镜头不设置，保持默认）
+upload: new_photo.jpg → asset_id_new
 ```
 
-设置完成后调用 `get_state` 验证：每个镜头（除最后一个）均有 tail_frame，且 asset_id 与下一镜首帧一致。
-
-### script-to-video / product-showcase / ad-to-video / photo-vlog — 清除所有尾帧
-
-检查续写镜头是否存在尾帧，若存在发消息清除：
+Then send the script with the asset_id written into the shot description:
 
 ```
-发消息：「请清除所有续写镜头的尾帧（tail_frame），只保留首帧」
+Please continue the current project by adding the following continuation shots. Each shot requires only a start frame; do not set a tail frame (tail_frame).
+
+--- Continuation Shots ---
+
+[Shot N+1] [duration]s
+Shot description: Reference original photo $asset_id_new1, preserve the original photo's composition, color tone, and main subject; use this photo as the basis for generating the start frame. [supplementary description]
+Camera movement: [camera movement description]
+...
 ```
 
-调用 `sidebar.filter.shots` 确认续写镜头均只有 start_frame，无 end_frame / tail_frame。
+Wait for completion after sending.
 
 ---
 
-## Step 6：生成音频
+## Step 4: Filter Check
 
-点击 `workspace.btn_pipeline_dialogs`，**只选中续写镜头的音频项**（已有镜头的音频已生成，不要重复生成）：
+Call `sidebar.filter.shots` to check the continuation shots:
+- Whether the shot descriptions were correctly parsed
+- Whether the duration is sufficient to deliver the dialog (when dialog is present)
 
-- 有 BGM 的项目：BGM 通常已存在，若续写后时长变化导致 BGM 不足，重新生成 BGM
-- 有台词/旁白的项目：只选中续写镜头对应的 dialog 项
+Call `sidebar.filter.dialogs` to check dialog:
+- Whether dialog attribution is correct (script-to-video: multi-character lines must not be mixed up)
+- Whether narration shot content is complete
 
-确认后等待完成。
+Call `sidebar.filter.characters` (script-to-video / voiceover):
+- Whether the character identity_anchor for continuation shots is completely identical to existing shots
+- If any discrepancy is found, correct it immediately using `edit`
 
----
-
-## Step 7：生成视频
-
-点击 `workspace.btn_pipeline_videos`，**只选中续写镜头的 video 项**（已有镜头视频已生成，不重新生成）：
-
-- photo-vlog：只勾选 video，不勾选 frame/image（已有参考图，不要 AI 重新生成图片）
-- 其他类型：选中全部续写镜头的 video 项
-
-确认后等待完成。
+**Fix issues immediately using `edit` as they are found — do not save them up for the end.**
 
 ---
 
-## 关键经验
+## Step 5: Tail Frame Handling
 
-- **类型判断靠语义**：ad-to-video 看情绪/氛围/品牌驱动；product-showcase 看卖点/功能/旁白驱动；不要靠有无产品来判断（两者都可以有产品）
-- **延续要素原文复制**：角色 identity_anchor、场景描述从 filter 读出后原文粘入脚本，不改动任何词——改动必然导致角色外形漂移
-- **voiceover 首尾帧必须覆盖已有↔续写的接缝**：除了续写内部各镜的首尾帧，还要把已有项目最后一个镜头的 tail_frame 设为续写第一个镜头的 start_frame，否则接缝处会跳变
-- **只生成续写部分的音频和视频**：不要重新生成已有镜头，避免不必要消耗和覆盖已有内容
-- **叙事接续点要明确**：Step 2 分镜设计要从已有最后一个镜头的内容自然接续，在脚本中注明与上一镜的叙事关系
-- **undo/redo**：`workspace.btn_undo` / `workspace.btn_redo` 可回退误操作
+### voiceover — Set Start and Tail Frames (Adjacent Shot Continuity)
+
+First call `get_state` or `sidebar.filter.shots` to record the start_frame asset_id of **all shots** (both existing and continuation).
+
+Send one message per tail frame setting, **send each message separately, wait for a response before sending the next**:
+
+```
+Send message: "Please set the tail frame (tail_frame) of shot [shot_id of last existing shot] to $<start_frame_asset_id of continuation shot 1>"
+Send message: "Please set the tail frame (tail_frame) of shot [shot_id of continuation shot 1] to $<start_frame_asset_id of continuation shot 2>"
+Send message: "Please set the tail frame (tail_frame) of shot [shot_id of continuation shot 2] to $<start_frame_asset_id of continuation shot 3>"
+...(the last continuation shot is not set; leave as default)
+```
+
+After setting, call `get_state` to verify: each shot (except the last) has a tail_frame, and the asset_id matches the start frame of the next shot.
+
+### script-to-video / product-showcase / ad-to-video / photo-vlog — Clear All Tail Frames
+
+Check whether the continuation shots have any tail frames; if so, send a message to clear them:
+
+```
+Send message: "Please clear the tail frames (tail_frame) of all continuation shots, keeping only the start frame"
+```
+
+Call `sidebar.filter.shots` to confirm that all continuation shots have only a start_frame and no end_frame / tail_frame.
+
+---
+
+## Step 6: Generate Audio
+
+Click `workspace.btn_pipeline_dialogs`, **select only the audio items for the continuation shots** (existing shots already have audio generated; do not regenerate):
+
+- Projects with BGM: BGM usually already exists. If the total duration changes after continuation and BGM becomes insufficient, regenerate the BGM
+- Projects with dialog/narration: select only the dialog items corresponding to the continuation shots
+
+Confirm and wait for completion.
+
+---
+
+## Step 7: Generate Video
+
+Click `workspace.btn_pipeline_videos`, **select only the video items for the continuation shots** (existing shot videos are already generated; do not regenerate):
+
+- photo-vlog: check only video, do not check frame/image (reference photos already exist; do not have AI regenerate images)
+- Other types: select all video items for the continuation shots
+
+Confirm and wait for completion.
+
+---
+
+## Key Learnings
+
+- **Type determination is semantic**: ad-to-video is identified by emotion/atmosphere/brand drive; product-showcase by selling points/features/narration drive; do not judge by whether a product is present (both can have a product)
+- **Copy continuity elements verbatim**: read the character identity_anchor and scene descriptions from the filter, then paste them into the script exactly as-is without changing any word — any change will inevitably cause character appearance drift
+- **voiceover start/tail frames must cover the seam between existing and continuation**: in addition to the start/tail frames within the continuation shots themselves, the tail_frame of the last existing shot must also be set to the start_frame of the first continuation shot; otherwise there will be a jump cut at the seam
+- **Only generate audio and video for the continuation portion**: do not regenerate existing shots to avoid unnecessary consumption and overwriting existing content
+- **The narrative continuation point must be explicit**: the storyboard design in Step 2 must flow naturally from the content of the last existing shot, and the relationship to the preceding shot must be noted in the script
+- **undo/redo**: `workspace.btn_undo` / `workspace.btn_redo` can reverse accidental operations

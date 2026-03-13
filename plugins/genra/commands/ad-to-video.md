@@ -1,359 +1,359 @@
 # Brand Atmosphere Ad
 
-将用户的产品/品牌和情绪方向转化为高端品牌氛围片。
-核心是情绪弧线、视觉世界和快慢混剪节奏，而非产品功能展示。
-参考感知：Nike、Red Bull、Apple 的品牌片风格。
+Turn the user's product/brand and emotional direction into a high-end brand atmosphere film.
+The core is emotional arc, visual world, and fast-slow mixed-cut rhythm — not product feature demonstration.
+Reference perception: Nike, Red Bull, Apple brand film style.
 
-## 流程概览
+## Workflow Overview
 
-Step 1：参考检索（WebSearch） + 分析产品 + 输出创意概念和分镜方案（自检后展示给用户，直接继续）
-Step 2：上传产品参考图（如需产品镜头），创建项目，发送脚本
-Step 3：Filter 检查
-Step 4：清除所有尾帧
-Step 5：生成音频（BGM 为核心，旁白极简或没有）
-Step 6：生成所有视频
+Step 1: Reference search (WebSearch) + analyze product + output creative concept and storyboard (self-review, then present to user, continue directly)
+Step 2: Upload product reference images (if product shots are needed), create project, send script
+Step 3: Filter check
+Step 4: Clear all tail frames
+Step 5: Generate audio (BGM is the core, voiceover is minimal or absent)
+Step 6: Generate all videos
 
 ---
 
-## Step 1：分析产品 + 输出创意概念和分镜方案
+## Step 1: Analyze Product + Output Creative Concept and Storyboard
 
-**核心任务**：不是列功能，而是**建立一个视觉世界**。
+**Core task**: Not listing features, but **building a visual world**.
 
-### ① 参考检索（先于创意输出执行）
+### ① Reference Search (execute before creative output)
 
-在开始写分镜之前，**用 WebSearch 工具搜索 2-3 次**，找到真实的同类商业广告创意参考。
+Before writing the storyboard, **use the WebSearch tool to search 2-3 times** to find real-world creative references for similar commercial ads.
 
-**搜索策略**：
+**Search strategy**:
 
-根据产品品类和用户情绪方向，构造 1-2 条搜索词：
+Based on the product category and the user's emotional direction, construct 1-2 search queries:
 
-| 品类场景 | 搜索词示例 |
+| Category/Scene | Example Search Terms |
 |--------|---------|
-| 运动饮料/能量饮料 | `"Gatorade" OR "Red Bull" OR "Monster" ad script storyboard creative` |
-| 奢侈品/美妆 | `"Chanel" OR "Dior" perfume brand film storyboard script` |
-| 运动品牌 | `"Nike" OR "Adidas" brand film script shot list creative concept` |
-| 生活方式 | `[品牌名] brand film treatment creative brief` |
+| Sports/energy drinks | `"Gatorade" OR "Red Bull" OR "Monster" ad script storyboard creative` |
+| Luxury/beauty | `"Chanel" OR "Dior" perfume brand film storyboard script` |
+| Sports brands | `"Nike" OR "Adidas" brand film script shot list creative concept` |
+| Lifestyle | `[brand name] brand film treatment creative brief` |
 
-补充一条针对情绪方向的通用词：
-- `youth sports energy drink brand film shot list [当前年份]`
-- `[品类] commercial storyboard creative concept award-winning`
+Add one general query based on emotional direction:
+- `youth sports energy drink brand film shot list [current year]`
+- `[category] commercial storyboard creative concept award-winning`
 
-**从搜索结果中提取以下信息**（如果找到有价值的参考）：
+**Extract the following from search results** (if valuable references are found):
 
-- **情绪弧线模式**：顶级广告常用的叙事结构（如"极限→补给→重启"）
-- **镜头语言偏好**：行业内常见的镜头类型和节奏
-- **视觉风格标杆**：竞品或同类品牌的色彩/光线策略
-- **避开的雷区**：被用滥的表达方式
+- **Emotional arc patterns**: Narrative structures commonly used in top ads (e.g., "extreme → replenish → restart")
+- **Camera language preferences**: Shot types and pacing commonly seen in the industry
+- **Visual style benchmarks**: Color/lighting strategies from competitors or similar brands
+- **Clichés to avoid**: Overused expressions
 
-**重要原则**：
-- 参考是为了**找到可以差异化的切入点**，不是为了模仿
-- 如果搜索结果不够有价值（没找到具体的脚本/创意方向），直接跳过，用内置知识继续
-- 不要把搜索过程展示给用户，直接消化后用于后续创意输出
+**Key principles**:
+- References are for **finding a differentiated entry point**, not for copying
+- If search results are not valuable enough (no specific script/creative direction found), skip and continue with built-in knowledge
+- Do not show the search process to the user; absorb it and use it in subsequent creative output
 
-### ② 创意方向提炼
+### ② Creative Direction Distillation
 
-从用户提供的产品图和描述中，识别以下四项。**若用户没有明确描述某项，根据产品特点和品类经验主动确立，不要询问，直接给出判断。**
+From the product images and description provided by the user, identify the following four elements. **If the user has not explicitly described any element, actively establish it based on product characteristics and category experience — do not ask, just make the judgment.**
 
-- **品牌情绪关键词**（2-3 个）：力量感 / 速度 / 自由 / 孤独 / 奢华 / 纯粹 / 野性 / 冷静
-- **视觉世界方向**：参考哪种感知？（可以是品牌、电影、摄影风格）
-  - 运动饮料 → 黑夜城市 + 速度感，参考 Nike/Red Bull
-  - 奢侈品 → 极简静谧，参考 Celine/Bottega 广告美学
-  - 护肤品 → 自然光感，参考 Aesop/Glossier
-  - 如无明确线索，从产品形态/色彩/目标用户反推，确立一个清晰的感知方向
-- **叙事感**（三选一，根据产品特点判断）：
-  - 有隐性故事（人物经历某个时刻，情绪有起伏）→ 适合运动/生活方式品类
-  - 纯律动（无叙事，镜头跟着音乐走，视觉美感驱动）→ 适合时尚/音乐品类
-  - 氛围堆叠（不同场景/材质/瞬间的蒙太奇，统一在同一情绪下）→ 适合奢侈品/美妆
-- **产品出现方式**（根据叙事感和品类判断）：
-  - 贯穿始终（产品是视觉世界的一部分，每隔几镜自然出现）
-  - 压轴出场（前段纯氛围，最后几镜产品/logo 出现）→ 奢侈品/高端品牌常用
-  - 最小化存在（只在一个镜头中一闪而过，品牌感靠色彩和风格传递）
+- **Brand emotional keywords** (2-3): Power / Speed / Freedom / Solitude / Luxury / Purity / Wildness / Calm
+- **Visual world direction**: What perception does it reference? (can be a brand, film, or photography style)
+  - Sports drink → dark city + sense of speed, reference Nike/Red Bull
+  - Luxury goods → minimal tranquility, reference Celine/Bottega aesthetic
+  - Skincare → natural light feel, reference Aesop/Glossier
+  - If no clear cues, work backwards from product form/color/target audience and establish a clear perceptual direction
+- **Narrative sense** (choose one of three, based on product characteristics):
+  - Implicit story (character goes through a moment, with emotional rise and fall) → suitable for sports/lifestyle categories
+  - Pure rhythm (no narrative, shots follow the music, driven by visual aesthetics) → suitable for fashion/music categories
+  - Atmosphere stacking (montage of different scenes/textures/moments, unified under one emotion) → suitable for luxury/beauty
+- **Product appearance mode** (based on narrative sense and category):
+  - Throughout (product is part of the visual world, appearing naturally every few shots)
+  - Grand finale (pure atmosphere in the first part, product/logo appears in the last few shots) → common for luxury/high-end brands
+  - Minimal presence (only a fleeting appearance in one shot, brand feel conveyed through color and style)
 
-### ② 情绪弧线设计
+### ② Emotional Arc Design
 
-设计整片的情绪曲线，决定节奏骨架：
+Design the emotional curve of the entire film, establishing the rhythm skeleton:
 
-| 弧线类型 | 描述 | 适合品类 |
+| Arc Type | Description | Suitable Categories |
 |--------|-----|--------|
-| 压抑→爆发 | 开场克制压抑，中段快速升温，高潮爆发 | 运动/能量/赛车 |
-| 安静→震撼 | 开场极度安静美，缓慢推进到震撼性画面 | 奢侈品/高端美妆 |
-| 律动循环 | 无明显起伏，纯粹的视觉节奏感和美学 | 音乐/时尚/艺术品牌 |
-| 日常→超越 | 从平凡日常切入，升华到某种超越性时刻 | 生活方式/大众消费品 |
-| 冲突→和解 | 对立元素的张力和融合（速度 vs 静止，粗粝 vs 精致）| 汽车/运动品牌 |
+| Suppression → Explosion | Restrained and oppressive opening, rapid escalation in the middle, explosive climax | Sports/energy/racing |
+| Quiet → Stunning | Extremely quiet beauty at the start, slowly building to a stunning image | Luxury/high-end beauty |
+| Rhythmic Loop | No obvious rise and fall, pure visual rhythm and aesthetics | Music/fashion/art brands |
+| Everyday → Transcendence | Starting from the ordinary, elevating to a moment of transcendence | Lifestyle/mass consumer goods |
+| Conflict → Resolution | Tension and fusion of opposing elements (speed vs. stillness, roughness vs. refinement) | Automotive/sports brands |
 
-### ③ 分镜方案（基于情绪弧线，而非产品功能）
+### ③ Storyboard (based on emotional arc, not product features)
 
-规划 8-15 个镜头，时长 20-40 秒，每镜 1-4 秒（快慢混剪）：
+Plan 8-15 shots, 20-40 seconds total, each shot 1-4 seconds (fast-slow mixed cut):
 
-**常见镜头类型参考**（非穷举，根据产品和创意自由发明）：
+**Common shot type references** (non-exhaustive; freely invent based on product and creative concept):
 
-| 镜头类型 | 情绪作用 |
+| Shot Type | Emotional Function |
 |--------|--------|
-| 极近质感特写（材质/纹理/液体/皮肤） | 建立感知，制造张力 |
-| 慢动作动作瞬间（运动/爆破/流动） | 强化冲击力，制造戏剧感 |
-| 环境建立镜头（场景/空间感） | 建立世界，设定情绪基调 |
-| 人物情绪瞬间（眼神/表情/姿态） | 情感共鸣 |
-| 产品自然入场（作为道具，非刻意展示） | 品牌自然植入 |
-| 抽象视觉（光影/几何/运动模糊） | 节奏感、装饰性 |
-| 品牌/产品定格（简洁背景） | 品牌印记收尾 |
+| Extreme close-up texture (material/grain/liquid/skin) | Establish perception, create tension |
+| Slow-motion action moment (movement/explosion/flow) | Amplify impact, create drama |
+| Establishing shot (scene/sense of space) | Build the world, set the emotional tone |
+| Character emotional moment (gaze/expression/posture) | Emotional resonance |
+| Product natural entry (as a prop, not deliberately showcased) | Natural brand integration |
+| Abstract visual (light and shadow/geometry/motion blur) | Rhythm, decoration |
+| Brand/product freeze frame (clean background) | Brand impression, closing |
 
-以上只是起点。根据具体产品和情绪弧线，可以自由创造新的镜头类型——如产品倒影、人物与环境的对比切、材质的声音联觉、时间压缩等。**不要被这个列表限制。**
+The above is only a starting point. Based on the specific product and emotional arc, you can freely create new shot types — such as product reflections, contrast cuts between character and environment, sound synesthesia from materials, time compression, etc. **Do not be limited by this list.**
 
-**快慢混剪节奏参考**：
-- 开场 1-2 镜：慢（1.5-3s），建立世界感
-- 中段爆发：快切（0.5-1.5s），跟着音乐节拍
-- 高潮/产品镜头：慢下来（2-4s），让画面呼吸
-- 收尾：渐慢，定格（2-3s）
+**Fast-slow mixed cut rhythm reference**:
+- Opening 1-2 shots: slow (1.5-3s), establish the world feel
+- Mid-section burst: fast cuts (0.5-1.5s), following the music beat
+- Climax/product shots: slow down (2-4s), let the image breathe
+- Closing: gradually slower, freeze frame (2-3s)
 
-### ④ 产品镜头编排：身份原则（产品是这个世界的一部分，不是需求的答案）
+### ④ Product Shot Arrangement: Identity Principle (the product is part of this world, not an answer to a need)
 
-品牌广告不解释"为什么需要这个产品"——它建立的是"用这个产品的人是谁"。产品出现时，它属于这个世界，不是被展示的对象。
+Brand ads do not explain "why you need this product" — they establish "who the person using this product is." When the product appears, it belongs to this world; it is not the object being displayed.
 
-**三种产品自然融入模式：**
+**Three natural product integration modes:**
 
-| 模式 | 前置镜头（产品出现前） | 产品镜头的感觉 |
+| Mode | Preceding Shots (before product appears) | Feel of the Product Shot |
 |------|------------------|------------|
-| 产品是"身份符号" | 人物正处于某种状态/时刻，产品作为其世界的一部分存在 | 产品出现=这就是这种人的生活 |
-| 产品是"见证者" | 人物正在经历某个关键时刻 | 产品安静存在，见证这一刻 |
-| 产品是"结果象征" | 人物完成了情绪弧线（奋力→突破） | 产品出现在收尾，象征成就 |
+| Product as "identity symbol" | Character is in a certain state/moment; product exists as part of their world | Product appears = this is how this kind of person lives |
+| Product as "witness" | Character is experiencing a key moment | Product exists quietly, witnessing this moment |
+| Product as "symbol of result" | Character completes the emotional arc (struggle → breakthrough) | Product appears at the close, symbolizing achievement |
 
-❌ 禁止使用"触发点"模式（人物渴了/累了→产品满足需求）——这是功能广告逻辑，不是品牌广告
+❌ The "trigger point" mode is forbidden (character is thirsty/tired → product satisfies the need) — this is functional ad logic, not brand ad logic
 
-**核心禁忌：**
-❌ 产品在人物情绪之前出现（镜头1环境→镜头2产品→镜头3人物 = 错误）
-❌ 产品镜头与前后镜头没有视线/手势/情绪的连接
-❌ "贯穿始终"模式中产品独立展示，而非作为场景道具自然存在
+**Core prohibitions:**
+❌ Product appears before the character's emotion (shot 1 environment → shot 2 product → shot 3 character = wrong)
+❌ Product shot has no gaze/gesture/emotional connection to adjacent shots
+❌ In the "throughout" mode, product is displayed independently rather than naturally existing as part of the scene
 
-**产品镜头位置的规律：**
-- 前50%的镜头：产品至多出现1次，作为人物世界的背景道具
-- 中间30%：产品可作为"道具"出现（如手握瓶、随手放置）
-- 最后20%：产品可主角出镜（品牌收尾）
+**Rules for product shot placement:**
+- First 50% of shots: product appears at most once, as a background prop in the character's world
+- Middle 30%: product can appear as a "prop" (e.g., held in hand, casually placed)
+- Last 20%: product can take the lead (brand closing)
 
-### ⑤ 自检：对照核心原则 review 一次分镜方案
+### ⑤ Self-Review: Check the Storyboard Against Core Principles
 
-生成分镜后，**在展示给用户之前先过一遍以下检查清单**，发现问题直接修正：
+After generating the storyboard, **review it against the following checklist before presenting to the user**, and directly fix any issues found:
 
-| 检查项 | 判断标准 |
+| Check Item | Criteria |
 |------|--------|
-| 产品出现时序 | 产品出现是否作为"这个人的世界的一部分"，而非"解决需求"的答案？ |
-| 角色连续性 | 叙事线上的主角是否始终一人？多角色必须有明确的叙事关系（如同框/视线连接），不允许无理由切换主角。 |
-| 相邻镜头叙事连接 | 每个镜头接在上一个后面，有叙事理由（不能只是"也是冷蓝调"）？ |
-| 同质化堆叠 | 有没有3个以上相邻镜头表达同一情绪（如连续3镜都是"爆发"）？ |
-| 高潮后的过渡 | 情绪顶点之后，是否有1个"下降/呼吸"镜头再接产品或收尾？ |
-| 开场节奏 | 前2镜是否有慢镜建立世界观，而不是直接快切？ |
-| 人物描述深度 | 人物镜头是否有具体可见的身体细节，而不只是情绪标签？ |
+| Product appearance timing | Does the product appear as "part of this person's world" rather than as an answer to a need? |
+| Character continuity | Is there only one protagonist throughout the narrative? Multiple characters must have a clear narrative relationship (e.g., in the same frame/visual connection); switching protagonists without reason is not allowed. |
+| Narrative connection between adjacent shots | Does each shot follow the previous one with a narrative reason (not just "also in a cold blue tone")? |
+| Homogeneous stacking | Are there 3 or more adjacent shots expressing the same emotion (e.g., 3 consecutive shots all "explosive")? |
+| Transition after climax | After the emotional peak, is there 1 "descending/breathing" shot before the product or closing shot? |
+| Opening rhythm | Do the first 2 shots have a slow shot to establish the worldview, rather than jumping straight into fast cuts? |
+| Depth of character description | Do character shots have specific visible physical details, rather than just emotional labels? |
 
-自检后如有问题，直接修正分镜，再展示给用户。
+If issues are found after self-review, fix the storyboard directly, then present to the user.
 
-### ⑥ 向用户展示创意概念，直接进入 Step 2
+### ⑥ Present Creative Concept to User, Proceed Directly to Step 2
 
 ```
-【品牌氛围片创意方案】
+[Brand Atmosphere Film Creative Proposal]
 
-品牌情绪：[2-3个关键词]
-视觉世界：[一句话描述整体感知，如"深夜城市里的孤独速度感"]
-叙事感：[有隐性故事 / 纯律动 / 氛围堆叠]
-情绪弧线：[压抑→爆发 / 安静→震撼 / ...]
-产品出现方式：[贯穿 / 压轴 / 最小化]
+Brand emotion: [2-3 keywords]
+Visual world: [one-sentence description of the overall perception, e.g., "lonely sense of speed in the midnight city"]
+Narrative sense: [Implicit story / Pure rhythm / Atmosphere stacking]
+Emotional arc: [Suppression → Explosion / Quiet → Stunning / ...]
+Product appearance mode: [Throughout / Grand finale / Minimal]
 
-全局视觉风格：[具体描述]
-色彩世界：[主色调+强调色，如"深黑+冷蓝高光+少量红色爆点"]
-BGM：[节奏和情绪描述，如"低频合成器铺底，鼓点在第8秒爆发，BPM 130"]
+Global visual style: [specific description]
+Color world: [dominant color + accent color, e.g., "deep black + cold blue highlights + occasional red bursts"]
+BGM: [rhythm and emotion description, e.g., "low-frequency synthesizer base, drums explode at second 8, BPM 130"]
 
-分镜设计（共N镜，约X秒）：
-镜头1（Xs）- [镜头类型]：[画面描述]
-镜头2（Xs）- [镜头类型]：[画面描述]
+Storyboard design (N shots total, approx. X seconds):
+Shot 1 (Xs) - [shot type]: [visual description]
+Shot 2 (Xs) - [shot type]: [visual description]
 ...
 
-（正在创建项目……）
+(Creating project now...)
 ```
 
 ---
 
-## Step 2：上传产品参考图，创建项目，发送脚本
+## Step 2: Upload Product Reference Images, Create Project, Send Script
 
-### ① 上传产品参考图（仅当有产品出镜时需要）
+### ① Upload Product Reference Images (only needed when product appears on camera)
 
-上传 产品图.jpg → 获取 asset_id
+Upload product-photo.jpg → obtain asset_id
 
-若无产品出镜镜头（纯氛围片），可跳过上传。
+If there are no product shots (pure atmosphere film), skip the upload.
 
-### ② 发送完整脚本
+### ② Send the Complete Script
 
 ```
-请根据以下脚本创建品牌广告视频项目，中文，[分辨率]。
+Please create a brand ad video project based on the following script, in Chinese, [resolution].
 
-全局视觉风格：[风格描述]
-色彩基调：[主色+强调色]
-BGM：[节奏情绪描述，注明快慢混剪意图]
+Global visual style: [style description]
+Color tone: [dominant color + accent color]
+BGM: [rhythm and emotion description, noting fast-slow mixed cut intent]
 
-[如有产品出镜]
-产品参考图：$<asset_id>
-产品视觉描述：[颜色/形状/材质，产品出镜镜头须参考此图]
+[If product appears on camera]
+Product reference image: $<asset_id>
+Product visual description: [color/shape/material; product shots must reference this image]
 
-[如有人物]
-角色设定：
-- [角色名]：[外观描述]
+[If characters are present]
+Character settings:
+- [character name]: [appearance description]
 
-场景设定：
-- [场景名]：[环境+光线，重点描述情绪氛围]
+Scene settings:
+- [scene name]: [environment + lighting, focusing on emotional atmosphere]
 
-图像生成要求：每个镜头对应单一时间点的完整电影构图，不含分割线或多视角并列。每个镜头只需首帧，不要设置尾帧（tail_frame）。
+Image generation requirement: Each shot corresponds to a complete cinematic composition at a single point in time, with no dividing lines or multi-angle side-by-side layouts. Each shot only needs a start frame; do not set a tail frame (tail_frame).
 
---- 以下为分镜脚本 ---
+--- Storyboard script below ---
 
-【镜头1】[时长]s | [镜头类型]
-画面：[静态构图，当下时态，单一画面状态。重点描述情绪和视觉感知，而非功能]
+[Shot 1] [duration]s | [shot type]
+Visual: [static composition, present tense, single-state image. Focus on emotion and visual perception, not function]
 
-【镜头2】[时长]s | [镜头类型]
-画面：[...]
+[Shot 2] [duration]s | [shot type]
+Visual: [...]
 
 ...
 ```
 
-### 氛围片镜头描述要点
+### Key Points for Atmosphere Film Shot Descriptions
 
-**写氛围，不写功能**——镜头描述的重心是情绪和视觉感知：
+**Write atmosphere, not function** — the focus of the shot description is emotion and visual perception:
 
 ```
-❌ 功能导向："展示产品的能量补给功能，运动员喝了之后精神振奋"
-✅ 氛围导向："极近特写，运动员嘴唇轻触冰冷罐口的瞬间，
-             汗水和冷凝水珠同框，侧光勾勒轮廓，背景虚化成光晕"
+❌ Function-oriented: "Show the product's energy-replenishment function; the athlete feels energized after drinking it"
+✅ Atmosphere-oriented: "Extreme close-up, the moment an athlete's lips lightly touch the cold rim of the can,
+             sweat and condensation droplets in the same frame, side light sculpting the contour, background blurred into a halo"
 
-❌ 说明导向："场景展示跑步的人，表明产品适合运动场景"
-✅ 氛围导向："深夜城市，空旷街道，一个奔跑的身影，
-             路灯形成橙色光晕，运动模糊强化速度感，画面冷蓝"
+❌ Explanatory: "Scene shows a person running, indicating the product suits sporting scenarios"
+✅ Atmosphere-oriented: "Midnight city, empty street, a running silhouette,
+             street lamps forming orange halos, motion blur amplifying the sense of speed, cold blue image"
 ```
 
-**光线描述是情绪的核心**：
+**Lighting description is the core of emotion**:
 
-| 情绪意图 | 光线描述 |
+| Emotional Intent | Lighting Description |
 |--------|--------|
-| 压抑/张力 | 单侧强光，高对比阴影，冷白或蓝灰色调，暗部压暗 |
-| 爆发/高潮 | 逆光泛光，边缘光强烈，画面接近过曝的明亮 |
-| 奢华/静谧 | 低调柔和顶光，阴影优雅，金色或暖白色调 |
-| 速度/动感 | 运动模糊，光条拖影，色彩对比高，画面有方向性 |
-| 孤独/诗意 | 散射光，蓝灰低饱和，大面积留白，人物小而孤立 |
+| Suppression/tension | Single-side hard light, high-contrast shadows, cold white or blue-grey tones, deep shadows |
+| Explosion/climax | Backlight bloom, intense edge light, image brightness approaching overexposure |
+| Luxury/tranquility | Low-key soft top light, elegant shadows, golden or warm white tones |
+| Speed/dynamism | Motion blur, light streaks, high color contrast, directional image |
+| Solitude/poetry | Diffused light, blue-grey low saturation, large areas of empty space, small isolated figure |
 
-**人物情绪深度：用具体可见的细节替代情绪标签**
+**Depth of character emotion: replace emotional labels with specific visible details**
 
-人物镜头常见误区：用情绪标签替代视觉描述——"眼神锐利"、"充满斗志"、"笃定感"
-这类词对模型而言是模糊信号，生成出来的人物只是"做了一个动作"，没有可辨识的情绪质感。
+Common mistake in character shots: using emotional labels instead of visual descriptions — "sharp gaze," "full of fighting spirit," "resolute feel"
+These words are vague signals to the model; the generated character will only "make a gesture," with no identifiable emotional texture.
 
-正确方向：**把情绪翻译成具体可见的身体信号**——哪块肌肉收紧/放松、目光落点、姿态角度、与道具/环境的接触方式。
+Correct approach: **translate emotion into specific visible bodily signals** — which muscles are tense/relaxed, where the gaze lands, angle of posture, how the character contacts the prop/environment.
 
-| 情绪标签（避免） | 具体视觉细节（正确） |
+| Emotional Label (avoid) | Specific Visual Detail (correct) |
 |------------|----------------|
-| "眼神锐利如刀" | "瞳孔微收，目光固定在画面外某一点，眉间一道浅纵纹，嘴角平直不上扬" |
-| "表情凝重压抑" | "下颌轻微收紧，唇线抿平，额头无皱，视线向下15度落在前方地面" |
-| "握拳充满张力" | "五指指节发白，拇指压在食指外侧，手腕角度内收，前臂隐约可见肌肉线" |
-| "汗水飞溅动感" | "面颊和发际线处有汗珠，侧光下水珠形成细小高光，皮肤毛孔质感清晰" |
+| "Gaze sharp as a blade" | "Pupils slightly contracted, eyes fixed on a point outside the frame, a faint vertical crease between the brows, lips straight and not upturned" |
+| "Expression heavy and oppressive" | "Jaw lightly tightened, lips pressed flat, forehead smooth, gaze angled 15 degrees downward toward the ground ahead" |
+| "Fist clenched with tension" | "Knuckle joints whitened, thumb pressing over the outside of the index finger, wrist angled inward, faint muscle lines visible on the forearm" |
+| "Sweat flying with dynamism" | "Sweat droplets on cheek and hairline, water beads forming small highlights under side light, skin pore texture clearly visible" |
 
-**检查标准**：描述中有没有"可渲染的视觉元素"——如果删掉所有情绪形容词，剩下的细节本身还能传达那个情绪吗？如果不能，说明停留在标签层，需要换成具体身体信号。
+**Quality check**: Does the description contain "renderable visual elements"? — if you remove all emotional adjectives, can the remaining details still convey that emotion? If not, the description is stuck at the label level and needs to be replaced with specific bodily signals.
 
-发送后等待完成。
-
----
-
-## Step 3：Filter 检查
-
-检查镜头
-检查台词
-检查角色
-
-**氛围片专项检查要点**：
-- 镜头时长分布：是否有快慢节奏变化（不应全是同一时长）
-- 有旁白的镜头：台词是否极简（tagline 级别），归属是否正确
-- 产品出镜镜头：确认有产品描述，不被遗漏
-- BGM 字段：`global.bgm` 是否已设置
+Send and wait for completion.
 
 ---
 
-## Step 4：清除所有尾帧
+## Step 3: Filter Check
 
-快剪和节奏感切换需要干净利落，尾帧会导致融合异常：
+Check shots
+Check dialogue
+Check characters
+
+**Atmosphere film-specific check points**:
+- Shot duration distribution: Is there variation in fast-slow pacing (should not all be the same duration)?
+- Shots with voiceover: Is the copy minimal (tagline level)? Is the attribution correct?
+- Product shots: Confirm product description is present and not overlooked
+- BGM field: Has `global.bgm` been set?
+
+---
+
+## Step 4: Clear All Tail Frames
+
+Fast cuts and rhythm transitions require clean cuts; tail frames cause blending anomalies:
 
 ```
-发消息：「请清除所有镜头的尾帧（tail_frame），只保留首帧」
+Send message: "Please clear all tail frames (tail_frame) from all shots, keeping only the start frame"
 ```
 
-`get_state` 或 `filter_shots` 确认无尾帧残留。
+Use `get_state` or `filter_shots` to confirm no tail frames remain.
 
 ---
 
-## Step 5：生成音频
+## Step 5: Generate Audio
 
-生成音频
+Generate audio
 
-确认面板中所有项后点击确认，等待完成。
+Confirm all items in the panel and click confirm; wait for completion.
 
-### BGM 是氛围片的情绪骨骼
+### BGM is the Emotional Skeleton of the Atmosphere Film
 
-BGM 决定了整片的生死，在 `global.bgm` 字段仔细描述：
+BGM determines the life or death of the entire film. Describe it carefully in the `global.bgm` field:
 
-**BGM 描述公式**：`[乐器质感] + [节奏特征/BPM] + [情绪走向] + [关键节拍点说明]`
+**BGM description formula**: `[instrument texture] + [rhythm characteristics/BPM] + [emotional arc] + [key beat point notes]`
 
-| 品牌情绪 | BGM 描述示例 |
+| Brand Emotion | BGM Description Example |
 |--------|-----------|
-| 运动/爆发 | 电子合成器铺底，BPM 130，第5秒鼓点爆发，整体冷硬进攻感，无人声 |
-| 奢华/静谧 | 钢琴单音开场，弦乐缓缓铺入，节奏极慢，有空气感，气质高贵克制 |
-| 速度/自由 | 吉他 riff + 电子节拍，BPM 140，有呼吸感的律动，充满动能 |
-| 科技/未来感 | 纯电子合成，冷调，低频震感，BPM 100，间歇性高频音效 |
-| 诗意/情感 | 大提琴独奏，低沉有共鸣感，速度随情绪起伏，有情感弧线 |
+| Sports/explosion | Electronic synthesizer base, BPM 130, drums explode at second 5, overall cold and aggressive, no vocals |
+| Luxury/tranquility | Piano single note opening, strings slowly layering in, extremely slow tempo, airy feel, noble and restrained quality |
+| Speed/freedom | Guitar riff + electronic beat, BPM 140, breathing rhythm, full of momentum |
+| Tech/futuristic | Pure electronic synthesis, cold tone, low-frequency rumble, BPM 100, intermittent high-frequency sound effects |
+| Poetic/emotional | Cello solo, deep and resonant, tempo rises and falls with emotion, has an emotional arc |
 
-### 旁白（极简，可选）
+### Voiceover (minimal, optional)
 
-氛围片的台词通常只有一句 tagline，或完全没有。若有：
+Atmosphere film copy is usually just one tagline, or none at all. If included:
 
-- **只写 tagline**：5-10 字，意象感强，不解释产品
-- **音色**：与品牌气质一致，不要说教感（见 script-to-video 音色描述规范）
-
----
-
-## Step 6：生成所有视频
-
-生成所有视频
-
-全选所有镜头后确认，等待完成。
+- **Write only a tagline**: 5-10 words, strong imagery, does not explain the product
+- **Voice tone**: Consistent with the brand's character, not preachy (see script-to-video voice description guidelines)
 
 ---
 
-## 关键经验
+## Step 6: Generate All Videos
 
-- **先建立视觉世界，再想镜头**：Step 1 最重要的输出是那句"一句话描述整体感知"，镜头设计都服务于这个感知
-- **光线描述 = 情绪描述**：镜头描述中光线写准了，图片生成质量直接提升
-- **镜头描述写氛围，不写功能**：永远问"观众看到这个镜头会感受到什么"，而不是"这个镜头介绍了什么"
-- **快慢混剪靠时长分配**：Step 1 规划时就定好哪些镜头快（1-1.5s）哪些慢（2.5-4s），不要全是同一节奏
-- **色彩世界一致性是氛围片的生死线**：不同场景的镜头色调要在同一个色彩宇宙里，孤立镜头会刺破整体感
-- **产品自然融入而非刻意展示**：产品出现时，它是那个世界的一部分，不是被展示的对象
-- **产品出现前必须有人物情绪铺垫**：产品突兀的本质是"观众没有看到为什么需要它"——产品的上一个镜头，人物必须处于某种"缺失/渴望/极限"状态，产品出现才会感觉自然
-- **人物镜头写具体可见的细节，不写情绪标签**：不是"眼神锐利"，而是"瞳孔微收，目光固定在画面外某点，眉间浅纵纹"；不是"充满斗志"，而是"下颌轻收，唇线抿平，前臂肌肉隐约收紧"——把情绪翻译成模型能渲染的身体信号
-- **BGM 要仔细描述节拍点**：哪一秒有变化、爆发点在哪，这决定了整片的节奏骨架
-- **不使用尾帧**：快切节奏需要干净的切换
-- **undo/redo**：`workspace.btn_undo` / `workspace.btn_redo` 可回退误操作
+Generate all videos
+
+Select all shots and confirm; wait for completion.
 
 ---
 
-## 附录：情绪关键词与视觉语言速查
+## Key Learnings
 
-### 常见品牌情绪的视觉语言
+- **Build the visual world first, then think about shots**: The most important output of Step 1 is that one-sentence description of the overall perception; all shot designs serve this perception
+- **Lighting description = emotion description**: Get the lighting right in the shot description and image generation quality improves directly
+- **Write atmosphere in shot descriptions, not function**: Always ask "what will the audience feel when they see this shot," not "what does this shot introduce"
+- **Fast-slow mixed cuts rely on duration allocation**: Plan during Step 1 which shots are fast (1-1.5s) and which are slow (2.5-4s); do not make them all the same pace
+- **Color world consistency is the life or death of an atmosphere film**: Shots from different scenes must share the same color universe; isolated shots will shatter the overall feel
+- **Product integration should be natural, not deliberate**: When the product appears, it is part of that world, not the object being displayed
+- **Product must be preceded by character emotional build-up**: The root cause of a jarring product appearance is "the audience hasn't seen why they need it" — in the shot before the product, the character must be in some "lacking/longing/at the limit" state, so the product's appearance feels natural
+- **Write specific visible details for character shots, not emotional labels**: Not "sharp gaze," but "pupils slightly contracted, eyes fixed on a point outside the frame, a faint vertical crease between the brows"; not "full of fighting spirit," but "jaw lightly pulled in, lips pressed flat, forearm muscles faintly tightening" — translate emotion into bodily signals the model can render
+- **Describe BGM beat points carefully**: Which second has a change, where the burst point is — this determines the rhythm skeleton of the entire film
+- **Do not use tail frames**: Fast-cut rhythm requires clean transitions
+- **undo/redo**: `workspace.btn_undo` / `workspace.btn_redo` can revert accidental operations
 
-| 品牌情绪 | 色彩世界 | 光线风格 | 构图倾向 | 节奏感 |
+---
+
+## Appendix: Quick Reference — Emotional Keywords and Visual Language
+
+### Visual Language for Common Brand Emotions
+
+| Brand Emotion | Color World | Lighting Style | Composition Tendency | Rhythm |
 |--------|--------|--------|--------|------|
-| 力量/爆发 | 深黑+冷蓝+红色爆点 | 单侧硬光，高对比 | 低角仰拍，动态倾斜 | 快切为主，局部慢镜 |
-| 自由/速度 | 饱和蓝白，运动模糊 | 逆光，边缘光 | 宽景，大量留白 | 极快切 + 一两个慢镜 |
-| 奢华/克制 | 黑金/米白，低饱和 | 柔和漫射，精准点光 | 极简居中，大留白 | 整体慢，偶有快切 |
-| 科技/未来 | 深色背景+冷光线 | 发光质感，蓝白光带 | 对称/几何感 | 节奏感强，机械感 |
-| 自然/治愈 | 绿白暖米，高亮 | 自然漫射光，无硬影 | 呼吸感，不居中 | 舒缓慢镜 |
-| 诗意/感伤 | 低饱和蓝灰，冷调 | 阴天散射，无直射光 | 大留白，人物小 | 极慢，长镜头感 |
+| Power/explosion | Deep black + cold blue + red bursts | Single-side hard light, high contrast | Low-angle upshot, dynamic tilt | Primarily fast cuts, occasional slow motion |
+| Freedom/speed | Saturated blue-white, motion blur | Backlight, edge light | Wide shot, large empty space | Extreme fast cuts + one or two slow shots |
+| Luxury/restraint | Black-gold/off-white, low saturation | Soft diffused light, precise spot light | Minimal centered, large empty space | Overall slow, occasional fast cuts |
+| Tech/future | Dark background + cold light | Glowing texture, blue-white light bands | Symmetrical/geometric | Strong rhythm, mechanical feel |
+| Nature/healing | Green-white warm beige, bright | Natural diffused light, no hard shadows | Breathing feel, off-center | Slow, gentle motion |
+| Poetic/melancholic | Low-saturation blue-grey, cold tone | Overcast diffused light, no direct light | Large empty space, small figure | Extremely slow, long-shot feel |
 
-### 分辨率选择
+### Resolution Selection
 
-**默认：9:16 竖屏**（适配抖音/Reels/地铁屏/竖屏大屏）
+**Default: 9:16 vertical** (compatible with TikTok/Reels/subway screens/vertical large screens)
 
-| 使用场景 | 分辨率 |
+| Use Case | Resolution |
 |--------|------|
-| 抖音/Reels/竖屏大屏/地铁屏（默认）| 720×1280（9:16）|
-| YouTube/横屏广告/影院前贴片 | 1280×720（16:9）|
-| 方形社交媒体 | 720×720（1:1）|
+| TikTok/Reels/vertical large screen/subway screen (default) | 720×1280 (9:16) |
+| YouTube/horizontal ads/cinema pre-roll | 1280×720 (16:9) |
+| Square social media | 720×720 (1:1) |
 
