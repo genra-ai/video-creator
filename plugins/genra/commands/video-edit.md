@@ -16,14 +16,13 @@ Select a mode based on user intent:
 
 ### Step 1: Get State + Download All Images (A-category prerequisite, cannot be skipped)
 
-**Note**: `workspace.frame_preview` only displays images in the browser UI; the API does not return image content. A-category checks require obtaining the real image URL via the WebSocket script in Appendix A first, downloading and viewing with the Read tool; otherwise A-category cannot be executed.
+**Note**: The frame preview panel only displays images in the browser UI; the API does not return image content. A-category checks require obtaining the real image URL via the WebSocket script in Appendix A first, then downloading and viewing with the Read tool — otherwise A-category cannot be executed.
 
 Execution order:
-
 1. `get_state` to get all frameIds
-2. Use Bash tool to run the Python WebSocket script in Appendix A (replace SESSION_KEY) to get the image URL for each shot
-3. Use Bash tool to batch download: `curl -s --noproxy "genra.ai" {URL} -o /tmp/shot_N.jpg`
-4. Use Read tool to open `/tmp/shot_N.jpg` frame by frame and view image content
+2. Run the Python WebSocket script in Appendix A (replace SESSION_KEY) to get the image URL for each shot
+3. Batch download: `curl -s --noproxy "genra.ai" {URL} -o /tmp/shot_N.jpg`
+4. Use Read tool to open each `/tmp/shot_N.jpg` and view image content
 
 Build a checklist:
 ```
@@ -34,13 +33,12 @@ Also check: for non-voiceover projects that have a tail_frame, send the message 
 
 ### Step 2: A-category — Image Defects (must be based on images downloaded in Step 1)
 
-After viewing the actual images with the Read tool, check each item (three mandatory checks per frame):
-
+After viewing images with the Read tool, check each frame for:
 - **① Numbers/shot numbers bleeding into the image** (e.g., "SHOT 01" in the upper left corner)
 - **② Black borders/white borders/frames**
 - **③ Watermarks/text overlays**
 
-Other issues: finger distortion or other local defects → I2I; overall poor quality/seriously incorrect content → regenerate image.
+Other issues: finger distortion or local defects → I2I; overall poor quality/seriously incorrect content → regenerate image.
 
 After fixing, record "needs video regeneration=yes", and re-download that shot's image to confirm the fix.
 
@@ -55,19 +53,19 @@ Record "needs video regeneration=yes".
 
 An action required in the video description has already been completed in the still frame → it will be repeated or skipped during video generation.
 
-Fix: modify the video_description for that shot via chat message, remove the action already completed in the still frame, and replace it with continuing from the current state (**no need to regenerate the image**).
+Fix: modify the video description for that shot via chat message, remove the action already completed in the still frame, and replace it with continuing from the current state (**no need to regenerate the image**).
 
 Record "needs video regeneration=yes".
 
 ### Step 5: Generate Video in Bulk + Output Report
 
-Batch generate all shots marked "needs video regeneration=yes" (see Appendix for video generation), then output:
+Batch generate all shots marked "needs video regeneration=yes" (see Appendix C), then output:
 
 ```
 ## Quality Check Report
 ### A-category: Shot 1 — number "SHOT 01" → I2I ✓; no issues with others
 ### B-category: No issues
-### C-category: Shot 2 — action overlap → modified video_description ✓
+### C-category: Shot 2 — action overlap → modified video description ✓
 ### Video: Shots 1 and 2 generated
 ### Conclusion: N issues found, M fixed
 ```
@@ -85,15 +83,11 @@ Batch generate all shots marked "needs video regeneration=yes" (see Appendix for
 
 ## Single Operation
 
-**I2I edit**: see Appendix
+**I2I edit**: see Appendix B
 
-**Modify description and regenerate image**:
-```
-edit {frameId}.description {new description}
-click workspace.frame_select.{frameId} → check only image/frame → click regenerate.btn_confirm
-```
+**Modify description and regenerate image**: edit `{frameId}.description`, then select the frame and regenerate image only (not video)
 
-**Modify dialog**: `edit dialog.{groupId}.{itemId}.text {new content}` → regenerate audio
+**Modify dialog**: edit `dialog.{groupId}.{itemId}.text`, then regenerate audio for that shot
 
 **Clear/set tail frame**:
 - Clear (script-to-video / ad-to-video, etc.): send message "Please clear all shot tail frames, keeping only the start frame"
@@ -112,7 +106,7 @@ import asyncio, ssl, struct, urllib.parse, json, re, base64, os
 
 async def get_frame_urls(sk):
     ctx = ssl.create_default_context()
-    ws_key = base64.b64encode(os.urandom(16)).decode()  # must be 16 bytes
+    ws_key = base64.b64encode(os.urandom(16)).decode()
     r, w = await asyncio.wait_for(
         asyncio.open_connection("action.genra.ai", 443, ssl=ctx), timeout=8)
     w.write((
@@ -150,27 +144,21 @@ asyncio.run(get_frame_urls("SESSION_KEY_HERE"))
 
 Download (bypass proxy): `curl -s --noproxy "genra.ai" {URL} -o /tmp/shot_N.jpg`
 
-After downloading, use the `Read` tool to view images (supports direct display of jpg/png) and check each frame for A-category defects.
+After downloading, use the Read tool to view images and check each frame for A-category defects.
 
 ### B. I2I Image Edit (four steps, all required)
 
-```
-Step 1: click workspace.frame_preview.{frameId}
-        → verify return contains [preview] mode=asset
-Step 2: edit chat.input {instruction}
-Step 3: click chat.btn_send → wait for panel to appear (approx. 30s)
-Step 4: verify [panel] targets=1 and frames: xxx(sel)
-        → click regenerate.btn_confirm
-```
-
-**Panel issues**:
-- `targets=2` (both frame + video selected) → `regenerate.toggle_resource {videoId}` to deselect video
-- `btn_confirm` does not appear → insufficient credits
+1. Open the frame's preview panel
+2. Type the I2I instruction in the chat input
+3. Send — wait for the generation confirmation panel to appear (approx. 30s)
+4. Verify the panel shows `targets=1` (one frame selected) → confirm generation
+   - If both frame + video are selected (`targets=2`), deselect the video item first
+   - If the confirm button does not appear → insufficient credits
 
 **Instruction format**: `Based on the current image, perform I2I editing: [what to change], [what to preserve]`
 
 | Scenario | Key instruction |
-|------|---------|
+|----------|----------------|
 | Remove number/shot label | `Remove the number "X" (shot label) appearing in the image; completely preserve all other content and composition` |
 | Remove black border/frame | `Remove the border around the image; extend the image content to fill the edges; main subject and composition unchanged` |
 | Remove watermark | `Remove the watermark/text overlay in the image; keep content and composition completely unchanged` |
@@ -181,8 +169,8 @@ I2I: retry at most 1 time; if two attempts are unsatisfactory, switch to "modify
 
 ### C. Video Generation
 
-**Batch**: `click workspace.btn_pipeline_videos` → confirm the number selected (if any are missed, use `regenerate.toggle_resource` to add them) → `click regenerate.btn_confirm`
+**Batch**: open the video generation panel, confirm the number selected (add any missed shots), confirm generation.
 
-**Single shot**: `click workspace.frame_select.{frameId}` → check only video → confirm
+**Single shot**: select the frame, check video only (not image), confirm.
 
 Poll every 15s, check `videos: XX%` and the `(vid)` flag on each frame. If "service busy" is shown, retry individually later.
