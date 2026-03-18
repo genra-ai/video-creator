@@ -1,4 +1,8 @@
-# Product Showcase
+---
+name: genra:product-showcase
+---
+
+# Product feature showcase
 
 Converts product images and selling points into an e-commerce showcase video. Core focus: feature demonstration and selling-point visualization — not brand atmosphere. Reference: Apple product page videos, Shopify/JD product main-image videos.
 

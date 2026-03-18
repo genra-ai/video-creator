@@ -1,4 +1,8 @@
-# Photo Vlog
+---
+name: genra:photo-vlog
+---
+
+# Photos to Vlog
 
 Turns 3–10 real photos into a 30–60s narrative Vlog short video. If no photos are provided, design character appearance and scenes autonomously (no-photo mode).
 

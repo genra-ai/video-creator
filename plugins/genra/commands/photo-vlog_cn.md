@@ -1,4 +1,8 @@
-# 照片 Vlog（Photo Vlog）
+---
+name: genra:photo-vlog
+---
+
+# 照片转 Vlog
 
 本技能将用户上传的 3-10 张真实照片，串联成一支 30-60 秒有叙事感的 Vlog 短视频。
 

@@ -3,7 +3,7 @@ name: genra:video-edit
 description: "Execute edit operations on existing Genra video projects: single edits, systematic quality check (A/B/C three categories), or batch modifications. Triggered when the user says 'check it for me', 'remove the watermark', 'change shot X to...', 'check and fix', or 'video edit'."
 ---
 
-# Video Edit
+# Edit & quality check
 
 Select a mode based on user intent:
 - **Single operation** ("Change shot 3's dialog to..." / "Remove the watermark from shot 5") → execute directly

@@ -1,4 +1,8 @@
-# Video Continuation
+---
+name: genra:video-continuation
+---
+
+# Extend existing video
 
 Reads an existing video project, identifies its type, and extends it with new shots following the same style, characters, and narrative logic.
 
