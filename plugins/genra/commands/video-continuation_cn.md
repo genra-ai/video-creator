@@ -1,3 +1,7 @@
+---
+name: genra:video-continuation
+---
+
 # 视频续写
 
 读取已有视频项目，判断内容类型（script-to-video、voiceover、product-showcase、ad-to-video、photo-vlog），结合用户的续写需求（内容方向、镜头数、结局等），设计后续分镜并发送续写脚本。

@@ -1,4 +1,8 @@
-# Voiceover
+---
+name: genra:talking-head
+---
+
+# Single speaker video
 
 Generate a 20–30 second talking-head video: single character speaking directly to camera, fixed medium shot, seamless continuity between adjacent shots.
 

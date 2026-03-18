@@ -1,4 +1,8 @@
-# 品牌氛围广告（Brand Atmosphere Ad）
+---
+name: genra:brand-story
+---
+
+# 品牌氛围短片
 
 本技能将用户的产品或品牌转化为高端品牌氛围短片，风格参考 Nike、Red Bull、Apple 等顶级品牌的广告美学。
 

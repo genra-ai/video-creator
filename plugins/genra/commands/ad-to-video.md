@@ -1,4 +1,8 @@
-# Brand Atmosphere Ad
+---
+name: genra:brand-story
+---
+
+# Brand atmosphere film
 
 Turns a product/brand and emotional direction into a high-end brand atmosphere film. Core: emotional arc, visual world, and fast-slow mixed-cut rhythm — not product feature demonstration. Reference: Nike, Red Bull, Apple brand films.
 

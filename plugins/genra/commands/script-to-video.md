@@ -1,4 +1,8 @@
-# Script to Video
+---
+name: genra:script-to-video
+---
+
+# Script to video
 
 Converts a multi-shot script (6–15 shots, multiple characters, multiple scenes) into a video. Does not rewrite the script — only supplements visual information before sending.
 
