@@ -1,5 +1,6 @@
 ---
 name: genra:video-continuation
+description: "Use this skill when the user wants to extend or continue an existing Genra video project, preserving the original style, characters, BGM, and narrative. Triggered by: 'continue the video', 'add more shots', '续写视频'."
 ---
 
 # Extend existing video

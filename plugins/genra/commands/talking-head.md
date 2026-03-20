@@ -1,5 +1,6 @@
 ---
 name: genra:talking-head
+description: "Use this skill when the user wants to create a single-person talking-head video: one character speaking directly to camera with fixed medium framing and seamless shot continuity. Triggered by: 'talking head', 'voiceover video', '单人口播'."
 ---
 
 # Single speaker video
