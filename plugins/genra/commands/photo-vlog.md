@@ -1,6 +1,6 @@
 ---
 name: genra:photo-vlog
-description: Use this skill when the user wants to convert 3–10 real photos into a 30–60 second narrative vlog video using img2img. Triggered by: "photo vlog", "make my photos into a video", "照片转视频".
+description: "Use this skill when the user wants to convert 3–10 real photos into a 30–60 second narrative vlog video using img2img. Triggered by: 'photo vlog', 'make my photos into a video', '照片转视频'."
 ---
 
 # Photos to Vlog
