@@ -1,5 +1,5 @@
 ---
-name: genra:news-broadcast
+name: news-broadcast
 description: "Use this skill when the user wants to create a news broadcast video with an anchor in a TV studio, with optional B-roll shots and reference-photo-based character fidelity. Triggered by: 'news broadcast', '新闻播报'."
 ---
 

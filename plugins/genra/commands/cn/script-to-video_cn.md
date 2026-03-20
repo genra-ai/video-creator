@@ -1,4 +1,4 @@
 ---
-name: genra:script-to-video
+name: script-to-video
 description: 当用户提供包含多角色、多场景的多镜头剧本并要求直接转视频时使用本技能。不改写剧本。触发词：「剧本转视频」「短剧」「多角色对话视频」。
 ---

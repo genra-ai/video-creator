@@ -1,4 +1,4 @@
 ---
-name: genra:photo-vlog
+name: photo-vlog
 description: 当用户想将3–10张真实照片转化为30–60秒叙事Vlog时使用本技能，以img2img方式保留照片原貌。触发词：「照片转视频」「照片Vlog」「把我的照片做成视频」。
 ---

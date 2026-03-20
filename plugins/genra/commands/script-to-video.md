@@ -1,5 +1,5 @@
 ---
-name: genra:script-to-video
+name: script-to-video
 description: "Use this skill when the user provides a multi-shot script with multiple characters and scenes to convert directly to video. Script is never rewritten. Triggered by: 'short drama', 'script to video', '剧本转视频'."
 ---
 
