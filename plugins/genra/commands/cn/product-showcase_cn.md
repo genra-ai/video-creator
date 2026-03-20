@@ -1,4 +1,4 @@
 ---
-name: genra:product-showcase
+name: product-showcase
 description: 当用户想创建电商产品展示视频时使用本技能：每个镜头突出一个卖点，配合旁白，适用于淘宝/京东/Shopify主图视频。触发词：「产品视频」「卖点展示」「电商视频」。
 ---

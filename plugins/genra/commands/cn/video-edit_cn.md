@@ -1,4 +1,4 @@
 ---
-name: genra:video-edit
+name: video-edit
 description: 当用户想对已有Genra视频项目进行编辑或质检时使用本技能：支持单项操作、A/B/C系统质检、批量修改。触发词：「帮我查一下」「去水印」「改第X镜的台词」「质检」「视频编辑」。
 ---

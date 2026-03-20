@@ -1,5 +1,5 @@
 ---
-name: genra:brand-story
+name: brand-story
 description: "Use this skill when the user wants to create a brand atmosphere film or emotional brand ad. Focus is on emotion, visual world, and fast-slow mixed rhythm — not product feature demonstration. Triggered by: 'brand film', 'atmosphere ad', 'Nike/Apple-style video'."
 ---
 
