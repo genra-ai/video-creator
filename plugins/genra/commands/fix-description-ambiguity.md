@@ -1,6 +1,6 @@
 ---
 name: fix-description-ambiguity
-description: "Detect and fix images where ambiguous description wording caused a physically impossible or wrong-angle result — e.g. seeing back of fabric through the front, inside-out garment, impossible camera penetration. Triggered by: 'seeing through fabric', 'physical blooper', '穿帮', 'impossible view', 'inside showing', 'back visible from front', 'check all shots for bloppers'."
+description: "Detect and fix images where ambiguous description wording caused a physically impossible or wrong-angle result — e.g. seeing back of fabric through the front, inside-out garment, impossible camera penetration. Triggered by: 'seeing through fabric', 'physical blooper', 'impossible view', 'inside showing', 'back visible from front', 'check all shots for bloppers'."
 ---
 
 # Description Ambiguity & Physical Blooper Fix
