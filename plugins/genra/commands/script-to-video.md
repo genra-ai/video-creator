@@ -1,6 +1,7 @@
 ---
-name: script-to-video
-description: "Use this skill when the user provides a multi-shot script with multiple characters and scenes to convert directly to video. Script is never rewritten. Triggered by: 'short drama', 'script to video'."
+name: Script to Video
+description: "Turn scripts into multi-scene cinematic videos."
+agent_description: "Use this skill when the user provides a multi-shot script with multiple characters and scenes to convert directly to video. Script is never rewritten. Triggered by: 'short drama', 'script to video'."
 ---
 
 # Script to video

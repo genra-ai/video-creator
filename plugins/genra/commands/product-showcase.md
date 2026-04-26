@@ -1,6 +1,7 @@
 ---
-name: product-showcase
-description: "Use this skill when the user wants to create an e-commerce product showcase video: each shot highlights one selling point with voiceover, suitable for Taobao/JD/Shopify main image videos. Triggered by: 'product video', 'showcase'."
+name: Product Showcase
+description: "Upload product images to generate e-commerce demo videos."
+agent_description: "Use this skill when the user wants to create an e-commerce product showcase video: each shot highlights one selling point with voiceover, suitable for Taobao/JD/Shopify main image videos. Triggered by: 'product video', 'showcase'."
 ---
 
 # Product feature showcase

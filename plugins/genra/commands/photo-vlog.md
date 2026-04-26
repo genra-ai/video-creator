@@ -1,6 +1,7 @@
 ---
-name: photo-vlog
-description: "Use this skill when the user wants to convert 3–10 real photos into a 30–60 second narrative vlog video using img2img. Triggered by: 'photo vlog', 'make my photos into a video'."
+name: Photo Vlog
+description: "Upload photos to turn them into narrative vlogs."
+agent_description: "Use this skill when the user wants to turn 3–10 photos into a 30–60 second narrative vlog. AI analyzes photos, designs camera movements, builds a story arc, and adds appropriate background music. Triggered by: 'photo vlog', 'turn photos into vlog', 'story video', 'vlog maker'."
 ---
 
 # Photos to Vlog

@@ -1,8 +1,8 @@
 ---
-name: video-continuation
-description: "Use this skill when the user wants to extend or continue an existing Genra video project, preserving the original style, characters, BGM, and narrative. Triggered by: 'continue the video', 'add more shots'."
+name: Video Continuation
+description: "Provide existing video to extend or continue it."
+agent_description: "Use this skill when the user wants to extend or continue an existing Genra video project, preserving the original style, characters, BGM, and narrative. Triggered by: 'continue the video', 'add more shots'."
 ---
-
 # Extend existing video
 
 Reads an existing video project, identifies its type, and extends it with new shots following the same style, characters, and narrative logic.
