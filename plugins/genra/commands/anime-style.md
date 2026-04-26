@@ -1,6 +1,7 @@
 ---
-name: anime-style
-description: "Use this skill when the user wants to convert an image into a popular anime art style: uses img2img to preserve original subject content, supports high-traffic styles like Studio Ghibli, Pixar, The Simpsons, Cyberpunk Anime, Marvel Comics. Image input only — no video-to-video conversion. Triggered by: 'turn into anime', 'Ghibli style', 'Pixar style', 'Simpsons style', 'cyberpunk anime', 'cartoonify', 'anime style'."
+name: Anime Style
+description: "Upload an image to transform it into popular anime art styles."
+agent_description: "Use this skill when the user wants to convert an image into a popular anime art style: uses img2img to preserve original subject content, supports high-traffic styles like Studio Ghibli, Pixar, The Simpsons, Cyberpunk Anime, Marvel Comics. Image input only — no video-to-video conversion. Triggered by: 'turn into anime', 'Ghibli style', 'Pixar style', 'Simpsons style', 'cyberpunk anime', 'cartoonify', 'anime style'."
 ---
 
 # Anime Style Conversion

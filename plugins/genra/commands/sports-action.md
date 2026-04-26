@@ -1,6 +1,7 @@
 ---
-name: sports-action
-description: "Use this skill when the user wants to create a sports or athletic action video — athlete highlights, extreme sports, motorsports, fitness training, sports event moments, or any content where physical motion, speed, and athletic performance are the primary subject. NOT for brand story videos that happen to feature athletes. NOT for cinematic trailers using sports as a dramatic backdrop. Triggered by: 'sports video', 'athlete highlight', 'extreme sports', 'training video', 'race video', 'sports reel', 'workout video', 'match highlight', 'skateboarding video', 'fitness video', 'sports montage', '运动视频', '体育视频', '训练视频', '极限运动', '比赛集锦', '运动员宣传片'."
+name: Sports Action
+description: "Describe the sport scene to generate an athletic action video."
+agent_description: "Use this skill when the user wants to create a sports or athletic action video — athlete highlights, extreme sports, motorsports, fitness training, sports event moments, or any content where physical motion, speed, and athletic performance are the primary subject. NOT for brand story videos that happen to feature athletes. NOT for cinematic trailers using sports as a dramatic backdrop. Triggered by: 'sports video', 'athlete highlight', 'extreme sports', 'training video', 'race video', 'sports reel', 'workout video', 'match highlight', 'skateboarding video', 'fitness video', 'sports montage', '运动视频', '体育视频', '训练视频', '极限运动', '比赛集锦', '运动员宣传片'."
 ---
 
 # Sports Action

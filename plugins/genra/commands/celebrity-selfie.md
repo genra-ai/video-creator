@@ -1,6 +1,7 @@
 ---
-name: celebrity-selfie
-description: "Use this skill when the user wants to generate a photo or video of themselves in the same frame as a celebrity-style character: upload user photo as img2img reference, specify target celebrity, generate a natural-looking shot of both together. Supports Polaroid selfie, street shot together, conversation interaction, etc. Triggered by: 'photo with celebrity', 'same frame as XX', 'celebrity photo', 'celebrity selfie', 'video with XX'."
+name: Celebrity Selfie
+description: "Upload your photo to generate a shot with a celebrity-style character."
+agent_description: "Use this skill when the user wants to generate a photo or video of themselves in the same frame as a celebrity-style character: upload user photo as img2img reference, specify target celebrity, generate a natural-looking shot of both together. Supports Polaroid selfie, street shot together, conversation interaction, etc. Triggered by: 'photo with celebrity', 'same frame as XX', 'celebrity photo', 'celebrity selfie', 'video with XX'."
 ---
 
 # Celebrity Selfie Video

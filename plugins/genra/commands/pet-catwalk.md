@@ -1,6 +1,7 @@
 ---
-name: pet-catwalk
-description: "Use this skill when the user wants to generate a fashion runway video of their pet: upload a pet photo, generate a video of the pet wearing an outfit and walking the runway with confident catwalk steps, complete with professional runway lighting and background. Triggered by: 'pet catwalk', 'pet runway', 'make my cat/dog walk the runway', 'pet catwalk'."
+name: Pet Catwalk
+description: "Upload a pet photo to generate a fashion runway walk video."
+agent_description: "Use this skill when the user wants to generate a fashion runway video of their pet: upload a pet photo, generate a video of the pet wearing an outfit and walking the runway with confident catwalk steps, complete with professional runway lighting and background. Triggered by: 'pet catwalk', 'pet runway', 'make my cat/dog walk the runway', 'pet catwalk'."
 ---
 
 # Pet Catwalk Video

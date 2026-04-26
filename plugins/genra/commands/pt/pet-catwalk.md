@@ -1,4 +1,4 @@
 ---
 name: Desfile de pet
-description: "Use esta habilidade para um vídeo de desfile de moda com seu pet. Ativado por: 'desfile de pet', 'pet na passarela', 'fazer meu pet desfilar'."
+description: "Envie uma foto do seu pet para gerar um vídeo de desfile de moda."
 ---

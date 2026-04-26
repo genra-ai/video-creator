@@ -1,4 +1,4 @@
 ---
 name: Feiertagsgruß-Video
-description: "Verwende diese Fähigkeit für ein atmosphärisches Grußvideo zu Feiertagen oder besonderen Anlässen. Ausgelöst durch: 'Feiertagsvideo', 'Grußvideo', 'Geburtstagsvideo'."
+description: "Geben Sie einen Feiertag und Empfänger ein, um ein festliches Grußvideo zu erstellen."
 ---

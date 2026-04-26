@@ -1,6 +1,7 @@
 ---
-name: product-explainer
-description: "Use this skill when the user wants to create a product explainer video: a presenter demonstrates and uses the product in a single scene, with engaging expressions and commentary. Triggered by: 'product explainer', 'product showcase video', 'make a demo video', 'explain my product'."
+name: Product Explainer
+description: "Input product info to generate a presenter-led demo video."
+agent_description: "Use this skill when the user wants to create a product explainer video: a presenter demonstrates and uses the product in a single scene, with engaging expressions and commentary. Triggered by: 'product explainer', 'product showcase video', 'make a demo video', 'explain my product'."
 ---
 
 # Product explainer video

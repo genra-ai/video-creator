@@ -1,6 +1,7 @@
 ---
-name: product-animation
-description: "Use this skill when the user wants to create a product 3D animation or pure motion showcase video — no presenter, no narration, pure product visuals: rotation, reveal, assembly/disassembly, or environment interaction. Triggered by: 'product rotation', '360 product view', 'product animation', '3D product video', 'assembly animation', 'product reveal', 'explode view', 'product spin', 'rotating product video', 'product 3D showcase', 'product disassembly animation', 'product environment animation', 'furniture open animation', 'architectural dimension video', 'device animation'."
+name: Product Animation
+description: "Upload a product image to create a 3D animation showcase video."
+agent_description: "Use this skill when the user wants to create a product 3D animation or pure motion showcase video — no presenter, no narration, pure product visuals: rotation, reveal, assembly/disassembly, or environment interaction. Triggered by: 'product rotation', '360 product view', 'product animation', '3D product video', 'assembly animation', 'product reveal', 'explode view', 'product spin', 'rotating product video', 'product 3D showcase', 'product disassembly animation', 'product environment animation', 'furniture open animation', 'architectural dimension video', 'device animation'."
 ---
 
 # Product Animation

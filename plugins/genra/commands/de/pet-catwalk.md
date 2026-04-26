@@ -1,4 +1,4 @@
 ---
 name: Haustier-Laufsteg
-description: "Verwende diese Fähigkeit für ein Mode-Laufsteg-Video mit deinem Haustier. Ausgelöst durch: 'Haustier-Laufsteg', 'Haustier-Modenschau', 'Haustier auf dem Laufsteg'."
+description: "Laden Sie ein Haustierfoto hoch, um ein Mode-Laufsteg-Video zu erstellen."
 ---

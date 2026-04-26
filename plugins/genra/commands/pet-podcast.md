@@ -1,6 +1,7 @@
 ---
-name: pet-podcast
-description: "Use this skill when the user wants to generate a fun video of their pet 'hosting a podcast': upload a pet photo, generate a short video of the pet sitting in front of a microphone, speaking like a human, mimicking a real podcast recording scene. Triggered by: 'pet podcast', 'make my cat/dog talk', 'pet host', 'pet podcast'."
+name: Pet Podcast
+description: "Upload a pet photo to generate a fun podcast-hosting video."
+agent_description: "Use this skill when the user wants to generate a fun video of their pet 'hosting a podcast': upload a pet photo, generate a short video of the pet sitting in front of a microphone, speaking like a human, mimicking a real podcast recording scene. Triggered by: 'pet podcast', 'make my cat/dog talk', 'pet host', 'pet podcast'."
 ---
 
 # Pet Podcast Video

@@ -1,6 +1,7 @@
 ---
-name: holiday-greeting
-description: "Use this skill when the user wants to create an atmosphere greeting video for a holiday or special occasion: user inputs the holiday name and recipient, generates a short video with the holiday's exclusive visual atmosphere, subtitle greetings, and an emotional closing. Works for any occasion — Chinese New Year, birthday, wedding, graduation, Christmas, etc. Triggered by: 'holiday video', 'greeting video', 'birthday video', 'holiday atmosphere short', 'greeting card video'."
+name: Holiday Greeting
+description: "Enter a holiday and recipient to create a festive greeting video."
+agent_description: "Use this skill when the user wants to create an atmosphere greeting video for a holiday or special occasion: user inputs the holiday name and recipient, generates a short video with the holiday's exclusive visual atmosphere, subtitle greetings, and an emotional closing. Works for any occasion — Chinese New Year, birthday, wedding, graduation, Christmas, etc. Triggered by: 'holiday video', 'greeting video', 'birthday video', 'holiday atmosphere short', 'greeting card video'."
 ---
 
 # Holiday Greeting Video
