@@ -1,6 +1,7 @@
 ---
-name: talking-head
-description: "Use this skill when the user wants to create a single-person talking-head video: one character speaking directly to camera with fixed medium framing and seamless shot continuity. Triggered by: 'talking head', 'voiceover video'."
+name: Talking Head
+description: "Create professional talking-head videos from scripts."
+agent_description: "Use this skill when the user wants to create a single-person talking-head video: one character speaking directly to camera with fixed medium framing and seamless shot continuity. Triggered by: 'talking head', 'voiceover video'."
 ---
 
 # Single speaker video

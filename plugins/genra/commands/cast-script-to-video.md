@@ -1,6 +1,7 @@
 ---
-name: cast-script-to-video
-description: "Use this skill when the user wants to produce a multi-character drama video with guaranteed character consistency — first generates a front-facing reference image for each character to lock their appearance, then proceeds to full drama production using those reference images as I2I anchors throughout. Triggered by: 'cast then shoot', 'character reference first', 'drama with character refs'."
+name: Cast Script to Video
+description: "Describe a script to generate multi-character drama videos."
+agent_description: "Use this skill when the user wants to produce a multi-character drama video with guaranteed character consistency — first generates a front-facing reference image for each character to lock their appearance, then proceeds to full drama production using those reference images as I2I anchors throughout. Triggered by: 'cast then shoot', 'character reference first', 'drama with character refs'."
 ---
 
 # Cast First, Then Shoot
