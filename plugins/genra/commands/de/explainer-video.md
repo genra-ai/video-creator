@@ -1,4 +1,4 @@
 ---
 name: Erklärvideo
-description: "Verwende diese Fähigkeit für Erklärvideos zu Konzepten, Produkten oder Prozessen. Ausgelöst durch: 'Erklärvideo', 'was ist XX', 'animierte Erklärung'."
+description: "Geben Sie ein Thema ein, um 60-Sekunden-Erklärvideos zu erstellen."
 ---

@@ -1,4 +1,4 @@
 ---
 name: Persönlichkeitswechsel
-description: "Verwende diese Fähigkeit, um ein Foto in einen bestimmten Charakter zu transformieren. Ausgelöst durch: 'verwandeln', 'zum Superhelden werden', 'Persönlichkeitswechsel'."
+description: "Laden Sie ein Porträt hoch, um sich in eine neue Figur zu verwandeln."
 ---
