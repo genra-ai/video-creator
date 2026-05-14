@@ -1,4 +1,4 @@
 ---
-name: casting-video
+name: Casting-Video
 description: "Beschreiben Sie ein Drehbuch, um Multi-Charakter-Drama-Videos zu erstellen."
 ---

@@ -1,4 +1,4 @@
 ---
-name: corregir-encuadre
+name: Corregir Encuadre
 description: "Describe el problema para generar una corrección."
 ---
