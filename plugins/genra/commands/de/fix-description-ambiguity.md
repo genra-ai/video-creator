@@ -1,4 +1,4 @@
 ---
-name: beschreibung-fehler
+name: Beschreibungsfehler Beheben
 description: "Beschreiben Sie das Problem, um eine Korrektur zu generieren."
 ---

@@ -1,4 +1,4 @@
 ---
-name: explicador-produto
+name: Explicação de Produto
 description: "Insira info do produto para gerar um vídeo de demonstração com apresentador."
 ---
